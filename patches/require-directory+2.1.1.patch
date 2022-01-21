@@ -1,0 +1,13 @@
+diff --git a/node_modules/require-directory/index.js b/node_modules/require-directory/index.js
+index cd37da7..e83da95 100644
+--- a/node_modules/require-directory/index.js
++++ b/node_modules/require-directory/index.js
+@@ -5,7 +5,7 @@ var fs = require('fs'),
+   resolve = require('path').resolve,
+   dirname = require('path').dirname,
+   defaultOptions = {
+-    extensions: ['js', 'json', 'coffee'],
++    extensions: ['js', 'ts', 'json', 'coffee'],
+     recurse: true,
+     rename: function (name) {
+       return name;
