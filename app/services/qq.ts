@@ -50,7 +50,7 @@ class QQManager {
         };
 
         const userMessage = await this.getUserMessage(access_token, res.data.openid);
-        const token = generateToken(user.user_id, user.user_type);
+        const token = generateToken(user.id, user.user_type);
 
         return {
             token,

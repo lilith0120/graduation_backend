@@ -28,7 +28,7 @@ router.post('/add', async (ctx) => {
 
 router.post('/oauth', async (ctx) => {
     const user = await OAuthValidator(ctx.request.body);
-    const token = generateToken(user.user_id, user.user_type);
+    const token = generateToken(user.id, user.user_type);
 
     success({
         token

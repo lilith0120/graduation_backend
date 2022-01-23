@@ -22,7 +22,7 @@ class Auth {
                 const decode: any = jwt.verify(token, auth.secretKey);
 
                 ctx.auth = {
-                    userId: decode.uid,
+                    id: decode.uid,
                     userType: decode.scope,
                 };
 

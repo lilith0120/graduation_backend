@@ -1,26 +1,21 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from "../../core/db";
 
-class User extends Model { };
+class BaseStage extends Model { };
 
-User.init({
+BaseStage.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     }, // 自增长id
-    user_id: {
+    name: {
         type: DataTypes.STRING(255),
-        unique: true,
         allowNull: false,
-    }, // 用户openId号
-    user_type: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    } // 用户类型 0:学生, 1:老师, 2:管理员
+    }, // 阶段名
 }, {
     sequelize,
-    tableName: 'user',
+    tableName: 'base_stage',
 });
 
-export default User;
+export default BaseStage;
