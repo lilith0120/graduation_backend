@@ -10,10 +10,24 @@ Stage.init({
         primaryKey: true,
         autoIncrement: true,
     }, // 自增长id
-    process: {
-        type: DataTypes.TEXT,
+    name: {
+        type: DataTypes.STRING(255),
         allowNull: false,
-    }, // 全部阶段
+    }, // 阶段名
+    parent_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }, // 根阶段id
+    pre_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }, // 上一阶段id
+    begin_at: {
+        type: DataTypes.DATE,
+    }, // 开始时间
+    end_at: {
+        type: DataTypes.DATE,
+    }, // 结束时间
 }, {
     sequelize,
     tableName: 'stage',

@@ -13,6 +13,10 @@ BaseStage.init({
         type: DataTypes.STRING(255),
         allowNull: false,
     }, // 阶段名
+    pre_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    }, // 上一阶段id
 }, {
     sequelize,
     tableName: 'base_stage',

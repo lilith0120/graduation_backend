@@ -20,6 +20,9 @@ File.init({
         unique: true,
         allowNull: false,
     }, // 材料url
+    file_detail: {
+        type: DataTypes.TEXT,
+    }, // 材料详细
     stage: {
         type: DataTypes.INTEGER,
         allowNull: false,
