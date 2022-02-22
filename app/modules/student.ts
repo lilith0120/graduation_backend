@@ -2,6 +2,7 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from "../../core/db";
 import User from './user';
 import Teacher from './teacher';
+import Profession from './profession';
 
 class Student extends Model { };
 
@@ -48,5 +49,6 @@ Student.init({
 
 Student.belongsTo(User);
 Student.belongsTo(Teacher);
+Student.belongsTo(Profession);
 
 export default Student;
