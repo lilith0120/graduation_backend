@@ -16,11 +16,11 @@ Student.init({
         type: DataTypes.STRING(255),
         allowNull: false,
     }, // 学生名
-    student_id: {
-        type: DataTypes.STRING(255),
-        unique: true,
-        allowNull: false,
-    }, // 学号
+    // student_id: {
+    //     type: DataTypes.STRING(255),
+    //     unique: true,
+    //     allowNull: false,
+    // }, // 学号
     sex: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -29,9 +29,9 @@ Student.init({
         type: DataTypes.STRING(20),
         allowNull: false,
     }, // 年级
-    email: {
-        type: DataTypes.STRING(255),
-    }, // 邮箱
+    // email: {
+    //     type: DataTypes.STRING(255),
+    // }, // 邮箱
     base_stage: {
         type: DataTypes.INTEGER,
         allowNull: false,

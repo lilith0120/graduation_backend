@@ -13,6 +13,7 @@ const catchError = async (ctx: any, next: any) => {
             };
             ctx.status = code;
         } else {
+            console.log(error);
             ctx.body = {
                 msg: "未知异常",
                 code: 23333,

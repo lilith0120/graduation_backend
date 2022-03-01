@@ -14,18 +14,18 @@ Teacher.init({
         type: DataTypes.STRING(255),
         allowNull: false,
     }, // 老师名
-    teacher_id: {
-        type: DataTypes.STRING(255),
-        unique: true,
-        allowNull: false,
-    }, // 教职工号
+    // teacher_id: {
+    //     type: DataTypes.STRING(255),
+    //     unique: true,
+    //     allowNull: false,
+    // }, // 教职工号
     sex: {
         type: DataTypes.INTEGER,
         allowNull: false,
     }, // 性别 0:男, 1:女
-    email: {
-        type: DataTypes.STRING(255),
-    }, // 邮箱
+    // email: {
+    //     type: DataTypes.STRING(255),
+    // }, // 邮箱
 }, {
     sequelize,
     tableName: 'teacher',

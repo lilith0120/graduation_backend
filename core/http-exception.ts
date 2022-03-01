@@ -14,7 +14,7 @@ class HttpException extends Error {
 };
 
 class OAuthException extends HttpException {
-    constructor(msg = null, errorCode = 40000) {
+    constructor(errorCode = 40000, msg = null) {
         super();
         this.msg = msg || codeMessage.getMessage(errorCode);
         this.errorCode = errorCode;

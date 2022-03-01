@@ -1,7 +1,7 @@
 const userTypeEnums = {
-    STUDENT: 0,
-    TEACHER: 1,
-    ADMIN: 2,
+    "学生": 0,
+    "教师": 1,
+    "管理员": 2,
 };
 
 export default userTypeEnums;

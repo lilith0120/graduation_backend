@@ -1,20 +1,20 @@
 import * as Router from 'koa-router';
-import { UserAddValidator, OAuthValidator } from '../../../app/validators';
+import { UserLoginValidator } from '../../../app/validators/loginValidator';
+import { UserAddValidator } from '../../../app/validators/userAddValidator';
 import { success } from '../../../lib/helper';
 import User from '../../modules/user';
 import { generateToken } from '../../../core/util';
-import QQManager from '../../../app/services/qq';
 const router = new Router({
     prefix: '/api/user',
 });
 
 router.post('/login', async (ctx) => {
-    const { code = '' } = ctx.request.query
-    const { token, userMessage } = await QQManager.getOpenId(code);
+    const user = await UserLoginValidator(ctx.request.body);
+    const token = generateToken(user.id, user.user_type);
 
     success({
         token,
-        userMessage,
+        uid: user.id,
     });
 });
 
@@ -24,15 +24,6 @@ router.post('/add', async (ctx) => {
     await User.bulkCreate(body);
 
     success();
-});
-
-router.post('/oauth', async (ctx) => {
-    const user = await OAuthValidator(ctx.request.body);
-    const token = generateToken(user.id, user.user_type);
-
-    success({
-        token
-    });
 });
 
 module.exports = router;

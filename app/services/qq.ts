@@ -94,7 +94,7 @@ class QQManager {
         const { nickname, figureurl_qq_1 } = res.data;
         const userMessage = {
             nickname,
-            figureurl_qq_1,
+            avatar: figureurl_qq_1,
         };
 
         return userMessage;

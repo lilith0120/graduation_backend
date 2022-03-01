@@ -14,7 +14,7 @@ export default {
     qq: {
         appId: '101993258',
         appKey: '1a2396bafa1a415081b5f12c3f80989d',
-        redirectUrl: 'http://my-graduation-project.com/home',
+        redirectUrl: 'http://my-graduation-project.com/progress-count',
         loginUrl: 'https://graph.qq.com/oauth2.0/authorize',
         tokenUrl: 'https://graph.qq.com/oauth2.0/token',
         openIdUrl: 'https://graph.qq.com/oauth2.0/me',
