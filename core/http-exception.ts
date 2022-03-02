@@ -40,9 +40,19 @@ class SuccessException extends HttpException {
     }
 };
 
+class RedisException extends HttpException {
+    constructor(errorCode = 42000, msg = null) {
+        super();
+        this.msg = msg || codeMessage.getMessage(errorCode);
+        this.errorCode = errorCode;
+        this.code = 400;
+    }
+};
+
 export {
     HttpException,
     OAuthException,
     Foribbiden,
     SuccessException,
+    RedisException,
 };

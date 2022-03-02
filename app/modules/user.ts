@@ -8,6 +8,7 @@ class User extends Model {
     user_id: any;
     user_type: any;
     id: any;
+    email: any;
 
     static async vertifyPassword(userId: string, userPswd: string) {
         const user = await User.findOne({
