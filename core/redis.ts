@@ -6,22 +6,36 @@ const config: any = {
     password: "wuhan20001226",
 };
 
-const client = redis.createClient(config.port);
+const client = redis.createClient({
+    socket: {
+        port: config.port,
+    },
+    password: config.password,
+});
+
 client.on('error', (err) => {
     throw new RedisException(err);
 });
+client.connect();
 
-client.auth(config.password); // 验证redis
-
-const setString = async () => {
-
+const setCode = async (key: any, value: any, expire = 60 * 5) => {
+    try {
+        await client.set(key, value);
+        await client.expire(key, expire);
+    } catch (err) {
+        throw new RedisException(err.message);
+    }
 };
 
-const getString = async () => {
-
+const getCode = async (key: any) => {
+    try {
+        return await client.get(key);
+    } catch (err) {
+        throw new RedisException(err.message);
+    }
 };
 
 export {
-    setString,
-    getString,
+    setCode,
+    getCode,
 };

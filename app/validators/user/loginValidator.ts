@@ -5,6 +5,7 @@ import Teacher from "../../modules/teacher";
 import { OAuthException } from "../../../core/http-exception";
 import { vertifyUserId } from "../index";
 import { sendConfig, recieveConfig } from "../../../config/email-config";
+import { setCode, getCode } from "../../../core/redis";
 
 const UserLoginValidator = async (body: any) => {
     const userId = body?.userId;
@@ -85,6 +86,7 @@ const GetEmailCode = async (email: any) => {
         }
 
         // 将邮箱和对应的验证码存入redis
+        await setCode(email, code);
     });
 };
 
@@ -93,6 +95,10 @@ const CheckEmailCode = async (email: any, code: any) => {
     await hasCodeValidator(code);
 
     // 判断是否验证码是否正确
+    const trueCode = await getCode(email);
+    if (code !== trueCode) {
+        throw new OAuthException(40016);
+    }
 };
 
 const RewritePassword = async (userId: any, userPswd: any) => {
