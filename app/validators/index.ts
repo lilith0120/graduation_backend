@@ -1,4 +1,3 @@
-import validator from "validator";
 import User from "../../app/modules/user";
 import { OAuthException } from "../../core/http-exception";
 
@@ -11,6 +10,11 @@ import { OAuthException } from "../../core/http-exception";
 const vertifyUserId = async (id: any, isHas = true) => {
     await hasUserIdValidator(id);
     await userIdValidator(id, isHas);
+};
+
+const vertifyId = async (id: any) => {
+    await hasUserIdValidator(id);
+    await IdValidator(id);
 };
 
 const hasUserIdValidator = async (id: any) => {
@@ -35,7 +39,16 @@ const userIdValidator = async (id: any, isHas = true) => {
     }
 };
 
+const IdValidator = async (id: any) => {
+    const user = await User.findByPk(id);
+
+    if (!user) {
+        throw new OAuthException(40004);
+    }
+};
+
 export {
     // OAuthValidator,
     vertifyUserId,
+    vertifyId,
 };

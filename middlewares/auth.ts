@@ -29,8 +29,6 @@ class Auth {
                 if (decode.scope < this.level) {
                     throw new Foribbiden(43002);
                 }
-
-                await next();
             } catch (error) {
                 if (error.name === 'TokenExpiredError') {
                     throw new Foribbiden(43001);
@@ -38,6 +36,8 @@ class Auth {
 
                 throw new Foribbiden();
             };
+
+            await next();
         };
     }
 };

@@ -1,6 +1,6 @@
 import * as Router from 'koa-router';
 import {
-    UserLoginValidator, EmailValidator, UserMessageValidator, GetEmailCode, CheckEmailCode, RewritePassword
+    UserLoginValidator, UserMessageValidator, RewritePassword
 } from '../../validators/user/loginValidator';
 import { UserAddValidator } from '../../validators/user/userAddValidator';
 import { success } from '../../../lib/helper';
@@ -22,28 +22,6 @@ router.post('/login', async (ctx) => {
         role: user.user_type,
         userName: userMessage.name,
     });
-});
-
-router.get('/email', async (ctx) => {
-    const email = await EmailValidator(ctx.request.body);
-
-    success({
-        email,
-    });
-});
-
-router.post('/email_code', async (ctx) => {
-    const { email } = ctx.request.body;
-    await GetEmailCode(email);
-
-    success("成功发送验证码");
-});
-
-router.post('/check_email_code', async (ctx) => {
-    const { email, code } = ctx.request.body;
-    await CheckEmailCode(email, code);
-
-    success();
 });
 
 router.patch('/rewrite_password', async (ctx) => {
