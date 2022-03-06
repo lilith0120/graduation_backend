@@ -1,6 +1,8 @@
+import { Op } from "sequelize";
 import Student from "../../modules/student";
 import User from "../../modules/user";
 import Teacher from "../../modules/teacher";
+import Profession from "../../modules/profession";
 import { vertifyId } from "..";
 import { RoleException } from "../../../core/http-exception";
 
@@ -35,6 +37,46 @@ const GetStudentMessage = async (userId: any) => {
     return student;
 };
 
+const GetAllStudent = async (size = 10, current = 1, search: any) => {
+    const students = await Student.findAll({
+        limit: size,
+        offset: (current - 1) * size,
+        where: {
+            name: {
+                [Op.substring]: search?.name ?? '',
+            },
+            sex: {
+                [Op.substring]: search?.sex ?? '',
+            },
+            grade: {
+                [Op.substring]: search?.grade ?? '',
+            },
+            profession_id: {
+                [Op.substring]: search?.profession_id ?? '',
+            },
+            teacher_id: {
+                [Op.substring]: search?.teacher_id ?? '',
+            }
+        },
+        include: [
+            {
+                model: User,
+                attributes: ["user_id"],
+                where: {
+                    user_id: {
+                        [Op.substring]: search?.student_id ?? '',
+                    },
+                },
+            },
+            Teacher,
+            Profession,
+        ],
+    });
+
+    return students;
+};
+
 export {
     GetStudentMessage,
+    GetAllStudent,
 };

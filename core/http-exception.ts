@@ -58,6 +58,15 @@ class RoleException extends HttpException {
     };
 };
 
+class SqlException extends HttpException {
+    constructor(msg = null, errorCode = 45000) {
+        super();
+        this.msg = msg || codeMessage.getMessage(errorCode);
+        this.errorCode = errorCode;
+        this.code = 400;
+    };
+};
+
 export {
     HttpException,
     OAuthException,
@@ -65,4 +74,5 @@ export {
     SuccessException,
     RedisException,
     RoleException,
+    SqlException,
 };

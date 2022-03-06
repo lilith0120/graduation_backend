@@ -4,7 +4,9 @@ import User from './user';
 import Teacher from './teacher';
 import Profession from './profession';
 
-class Student extends Model { };
+class Student extends Model {
+    grade: any;
+};
 
 Student.init({
     id: {
