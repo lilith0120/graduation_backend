@@ -1,7 +1,10 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from "../../core/db";
 
-class BaseStage extends Model { };
+class BaseStage extends Model {
+    pre_id: number;
+    id: number;
+};
 
 BaseStage.init({
     id: {
