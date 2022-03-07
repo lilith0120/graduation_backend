@@ -6,6 +6,7 @@ import Profession from './profession';
 
 class Student extends Model {
     grade: any;
+    user_id: number;
 };
 
 Student.init({
