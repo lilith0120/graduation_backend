@@ -5,6 +5,31 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import { OAuthException, SqlException } from "../../../core/http-exception";
 
+const AddStudents = async (students: any) => {
+    const studentsMessage = [];
+
+    for (let s of students) {
+        const studentMessage = {
+            name: s.name,
+            sex: s.sex,
+            grade: s.grade,
+            TeacherId: s.teacher_id,
+            ProfessionId: s.profession_id,
+            User: {
+                user_id: s.user_id,
+                user_pswd: s.user_id,
+                email: s?.email ?? "",
+                user_type: 0,
+            },
+        };
+        studentsMessage.push(studentMessage);
+    }
+
+    await Student.bulkCreate(studentsMessage, {
+        include: [User],
+    });
+};
+
 const DeleteStudents = async (students: any) => {
     const studentIds = [];
     const userIds = [];
@@ -90,6 +115,28 @@ const UpdateStudentMessage = async (id: any, form: any) => {
     } catch (err) {
         throw new SqlException(err.message);
     }
+};
+
+const AddTeachers = async (teachers: any) => {
+    const teachersMessage = [];
+
+    for (let s of teachers) {
+        const teacherMessage = {
+            name: s.name,
+            sex: s.sex,
+            User: {
+                user_id: s.user_id,
+                user_pswd: s.user_id,
+                email: s?.email ?? "",
+                user_type: 1,
+            },
+        };
+        teachersMessage.push(teacherMessage);
+    }
+
+    await Teacher.bulkCreate(teachersMessage, {
+        include: [User],
+    });
 };
 
 const GetTeacherMessage = async (teacherId: any) => {
@@ -181,9 +228,11 @@ const teacherIdVertify = async (teacherId: any) => {
 };
 
 export {
+    AddStudents,
     DeleteStudents,
     GetStudentMessage,
     UpdateStudentMessage,
+    AddTeachers,
     GetTeacherMessage,
     UpdateTeacherMessage,
 };
