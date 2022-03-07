@@ -92,9 +92,67 @@ const UpdateStudentMessage = async (id: any, form: any) => {
     }
 };
 
+const GetTeacherMessage = async (teacherId: any) => {
+    await hasTeacherIdVertify(teacherId);
+    await teacherIdVertify(teacherId);
+
+    const teacher = await Teacher.findOne({
+        where: {
+            id: teacherId,
+        },
+        include: [
+            {
+                model: User,
+                attributes: ["user_id", "email"],
+            }
+        ]
+    });
+
+    return teacher;
+};
+
+const UpdateTeacherMessage = async (id: any, form: any) => {
+    await hasTeacherIdVertify(id);
+    await teacherIdVertify(id);
+
+    try {
+        await sequelize.transaction(async (t) => {
+            await Teacher.update({
+                name: form.name,
+                sex: form.sex,
+            }, {
+                where: {
+                    id,
+                },
+                transaction: t,
+            });
+
+            const teacher = await Teacher.findByPk(id, { transaction: t });
+
+            await User.update({
+                user_id: form.teacher_id,
+                email: form.email,
+            }, {
+                where: {
+                    id: teacher.toJSON().UserId,
+                },
+                transaction: t,
+            });
+        });
+    } catch (err) {
+        throw new SqlException(err.message);
+    }
+};
+
 const hasStudentIdVertify = async (studentId: any) => {
     if (!studentId) {
         throw new OAuthException(40021);
+    }
+};
+
+const hasTeacherIdVertify = async (teacherId: any) => {
+    if (!teacherId) {
+        throw new OAuthException(40023);
     }
 };
 
@@ -110,8 +168,22 @@ const studentIdVertify = async (studentId: any) => {
     }
 };
 
+const teacherIdVertify = async (teacherId: any) => {
+    const user = await Teacher.findOne({
+        where: {
+            id: teacherId,
+        },
+    });
+
+    if (!user) {
+        throw new OAuthException(40024);
+    }
+};
+
 export {
     DeleteStudents,
     GetStudentMessage,
     UpdateStudentMessage,
+    GetTeacherMessage,
+    UpdateTeacherMessage,
 };

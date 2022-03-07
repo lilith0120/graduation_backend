@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import User from "../../modules/user";
 import Teacher from "../../modules/teacher";
 import { vertifyId } from "..";
@@ -25,6 +26,35 @@ const GetTeacherMessage = async (userId: any) => {
     return teacher;
 };
 
+const GetAllTeacher = async (size = 10, current = 1, search: any) => {
+    const teachers = await Teacher.findAll({
+        limit: size,
+        offset: (current - 1) * size,
+        where: {
+            name: {
+                [Op.substring]: search?.name ?? '',
+            },
+            sex: {
+                [Op.substring]: search?.sex ?? '',
+            },
+        },
+        include: [
+            {
+                model: User,
+                attributes: ["user_id"],
+                where: {
+                    user_id: {
+                        [Op.substring]: search?.teacher_id ?? '',
+                    },
+                },
+            },
+        ],
+    });
+
+    return teachers;
+};
+
 export {
     GetTeacherMessage,
+    GetAllTeacher,
 };
