@@ -1,5 +1,8 @@
 import BaseStage from "../../modules/baseStage";
+import Student from "../../modules/student";
 import { OAuthException } from "../../../core/http-exception";
+import sequelize from "../../../core/db";
+import { Op } from 'sequelize';
 
 const GetProcess = async () => {
     const baseStage = await BaseStage.findAll();
@@ -70,6 +73,36 @@ const UpdateProcess = async (stage: any) => {
     await BaseStage.bulkCreate(stageArr, { updateOnDuplicate: ["name", "pre_id"] });
 };
 
+const CountProcessData = async (grade: any) => {
+    const count: any = await Student.findAll({
+        where: {
+            grade: {
+                [Op.substring]: grade === "-1" ? "" : grade,
+            },
+        },
+        group: "base_stage_id",
+        attributes: [
+            [sequelize.fn('COUNT', sequelize.col('base_stage_id')), 'value'],
+        ],
+        include: [{
+            model: BaseStage,
+            attributes: ["name"],
+        }],
+    });
+
+    const result = [];
+    for (let c of count) {
+        c = c.toJSON();
+        const r = {
+            value: c.value,
+            name: c.BaseStage.name,
+        };
+        result.push(r);
+    }
+
+    return result;
+};
+
 const hasTitleVertify = async (title: any) => {
     if (!title) {
         throw new OAuthException(40017);
@@ -94,4 +127,5 @@ export {
     EditProcess,
     DeleteProcess,
     UpdateProcess,
+    CountProcessData,
 };

@@ -23,9 +23,4 @@ router.get('/all', new Auth().verify, async (ctx) => {
     });
 });
 
-// 先不做这个接口
-// router.post('/add_all', new Auth().verify, async (ctx) => {
-//     const { studens } = ctx.request.body;
-// });
-
 module.exports = router;

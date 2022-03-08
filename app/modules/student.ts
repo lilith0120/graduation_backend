@@ -3,6 +3,8 @@ import sequelize from "../../core/db";
 import User from './user';
 import Teacher from './teacher';
 import Profession from './profession';
+import BaseStage from './baseStage';
+import Stage from './stage';
 
 class Student extends Model {
     grade: any;
@@ -35,16 +37,6 @@ Student.init({
     // email: {
     //     type: DataTypes.STRING(255),
     // }, // 邮箱
-    base_stage: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0, // 0：未开始
-    }, // 毕设基础阶段id
-    stage: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0, // 0：未开始
-    }, // 毕设阶段id
 }, {
     sequelize,
     tableName: 'student',
@@ -53,5 +45,7 @@ Student.init({
 Student.belongsTo(User);
 Student.belongsTo(Teacher);
 Student.belongsTo(Profession);
+Student.belongsTo(BaseStage);
+Student.belongsTo(Stage);
 
 export default Student;

@@ -2,7 +2,8 @@ import * as Router from 'koa-router';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
-    GetProcess, SaveProcess, EditProcess, DeleteProcess, UpdateProcess
+    GetProcess, SaveProcess, EditProcess, DeleteProcess, UpdateProcess,
+    CountProcessData
 } from '../../validators/admin/processValidator';
 const router = new Router({
     prefix: '/api/admin/process',
@@ -43,6 +44,15 @@ router.patch('/update', new Auth().verify, async (ctx) => {
     await UpdateProcess(stage);
 
     success();
+});
+
+router.get('/count/:grade', new Auth().verify, async (ctx) => {
+    const { grade } = ctx.params;
+    const count = await CountProcessData(grade);
+
+    success({
+        count,
+    });
 });
 
 module.exports = router;
