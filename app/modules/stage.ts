@@ -2,7 +2,10 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from "../../core/db";
 import Teacher from './teacher';
 
-class Stage extends Model { };
+class Stage extends Model {
+    pre_id: number;
+    id: number;
+};
 
 Stage.init({
     id: {

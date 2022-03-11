@@ -4,6 +4,7 @@ import sequelize from "../../core/db";
 class BaseStage extends Model {
     pre_id: number;
     id: number;
+    children: any[];
 };
 
 BaseStage.init({
