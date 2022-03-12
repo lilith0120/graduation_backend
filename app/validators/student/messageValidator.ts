@@ -51,10 +51,10 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
             grade: {
                 [Op.substring]: search?.grade ?? '',
             },
-            profession_id: {
+            ProfessionId: {
                 [Op.substring]: search?.profession_id ?? '',
             },
-            teacher_id: {
+            TeacherId: {
                 [Op.substring]: search?.teacher_id ?? '',
             }
         },

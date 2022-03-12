@@ -1,7 +1,9 @@
 import * as Router from 'koa-router';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
-import { GetGradeMessage, GetProfessionMessage, GetTeacherMessage } from '../../validators/util/messageValidator';
+import {
+    GetGradeMessage, GetProfessionMessage, GetTeacherMessage, GetProcessMessage
+} from '../../validators/util/messageValidator';
 const router = new Router({
     prefix: '/api/util',
 });
@@ -28,6 +30,15 @@ router.get('/get_teacher', new Auth().verify, async () => {
     success({
         teachers,
     })
+});
+
+router.get('/get_process/:teacherId', new Auth().verify, async (ctx) => {
+    const { teacherId } = ctx.params;
+    const process = await GetProcessMessage(teacherId);
+
+    success({
+        process,
+    });
 });
 
 router.post('/upload_file', new Auth().verify, async (ctx) => {

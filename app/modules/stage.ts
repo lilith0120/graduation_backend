@@ -5,6 +5,7 @@ import Teacher from './teacher';
 class Stage extends Model {
     pre_id: number;
     id: number;
+    parent_id: number;
 };
 
 Stage.init({

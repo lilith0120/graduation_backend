@@ -1,6 +1,7 @@
 import Student from "../../modules/student";
 import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
+import Stage from "../../modules/stage";
 import { OAuthException } from "../../../core/http-exception";
 
 const GetGradeMessage = async () => {
@@ -33,8 +34,55 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
+const GetProcessMessage = async (teacherId: any) => {
+    await hasTeacherIdVertify(teacherId);
+    await teacherIdVertify(teacherId);
+
+    const stage = await Stage.findAll({
+        where: {
+            TeacherId: teacherId,
+        },
+    });
+
+    const result = [];
+    let preId = -1;
+    let parentId = 1;
+    while (result.length < stage.length) {
+        const value = stage.find((item) => {
+            return item.pre_id === preId && item.parent_id === parentId;
+        });
+
+        if (!value) {
+            parentId += 1;
+            preId = -1;
+            continue;
+        }
+
+        const v = value.toJSON();
+        result.push(v);
+        preId = v.id;
+    }
+
+    return result;
+};
+
+const hasTeacherIdVertify = async (teacherId: any) => {
+    if (!teacherId) {
+        throw new OAuthException(40023);
+    }
+};
+
+const teacherIdVertify = async (teacherId: any) => {
+    const teacher = await Teacher.findByPk(teacherId);
+
+    if (!teacher) {
+        throw new OAuthException(40024);
+    }
+};
+
 export {
     GetGradeMessage,
     GetProfessionMessage,
     GetTeacherMessage,
+    GetProcessMessage,
 };
