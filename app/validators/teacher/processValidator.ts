@@ -1,18 +1,18 @@
 import Stage from "../../modules/Stage";
 import BaseStage from "../../modules/baseStage";
-import Student from "../../modules/student";
+import Teacher from "../../modules/teacher";
 import { OAuthException } from "../../../core/http-exception";
 import { GetProcess as GetBaseProcess } from "../admin/processValidator";
-import sequelize from "../../../core/db";
-import { Op } from 'sequelize';
 
-const GetProcess = async () => {
+const GetProcess = async (id: any) => {
+    const teacherId = await getTeacherId(id);
     const baseStage = await GetBaseProcess();
     const resultStage = Promise.all(baseStage.map(async (item) => {
         const baseItem = item.toJSON();
         const stage = await Stage.findAll({
             where: {
                 parent_id: baseItem.id,
+                TeacherId: teacherId,
             },
         });
 
@@ -34,7 +34,6 @@ const GetProcess = async () => {
         const children = result.map((i) => {
             const c = i.toJSON();
             c.key = `${c.parent_id}-${c.id}`;
-            c.pre_id = (c.pre_id === -1 ? -1 : `${c.parent_id}-${c.pre_id}`);
             c.title = c.name;
 
             return c;
@@ -67,7 +66,7 @@ const SaveProcess = async (newStage: any, teacherId: any) => {
         throw new OAuthException(40019);
     }
 
-    return item;
+    return item.toJSON();
 };
 
 const EditProcess = async (title: any, id: any) => {
@@ -83,7 +82,7 @@ const EditProcess = async (title: any, id: any) => {
     });
 };
 
-const DeleteProcess = async (id: any) => {
+const DeleteProcess = async (id: any, stage: any) => {
     await hasIdVertify(id);
 
     await Stage.destroy({
@@ -91,21 +90,40 @@ const DeleteProcess = async (id: any) => {
             id,
         },
     });
+
+    await UpdateProcess(stage);
 };
 
 const UpdateProcess = async (stage: any) => {
     const stageArr = [];
     for (let s of stage) {
-        const value = {
-            id: s.key,
-            name: s.title,
-            pre_id: s.pre_id,
-        };
+        if (s.children) {
+            for (let i of s.children) {
+                const value = {
+                    id: i.id,
+                    name: i.name,
+                    pre_id: i.pre_id,
+                    parent_id: i.parent_id,
+                };
 
-        stageArr.push(value);
+                stageArr.push(value);
+            }
+        }
     }
 
-    await BaseStage.bulkCreate(stageArr, { updateOnDuplicate: ["name", "pre_id"] });
+    await Stage.bulkCreate(stageArr, { updateOnDuplicate: ["pre_id"] });
+};
+
+const EditProcessTime = async (id: any, time: any) => {
+    const { begin_at, end_at } = time;
+    await Stage.update({
+        begin_at,
+        end_at,
+    }, {
+        where: {
+            id,
+        }
+    });
 };
 
 const hasTitleVertify = async (title: any) => {
@@ -140,10 +158,21 @@ const parentIdVertify = async (parentId: any) => {
     }
 };
 
+const getTeacherId = async (id: any) => {
+    const teacher = await Teacher.findOne({
+        where: {
+            UserId: id,
+        },
+    });
+
+    return teacher.toJSON().id;
+};
+
 export {
     GetProcess,
     SaveProcess,
     EditProcess,
     DeleteProcess,
     UpdateProcess,
+    EditProcessTime,
 };

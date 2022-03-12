@@ -21,7 +21,11 @@ router.post('/add', new Auth().verify, async (ctx) => {
     const { title, pre_id } = ctx.request.body;
     const item = await SaveProcess(title, pre_id);
 
-    success({ ...item.toJSON() });
+    success({
+        ...item,
+        key: item.id,
+        title: item.name,
+    });
 });
 
 router.patch('/edit/:id', new Auth().verify, async (ctx) => {
@@ -34,7 +38,8 @@ router.patch('/edit/:id', new Auth().verify, async (ctx) => {
 
 router.delete('/delete/:id', new Auth().verify, async (ctx) => {
     const { id } = ctx.params;
-    await DeleteProcess(id);
+    const { stage } = ctx.request.body;
+    await DeleteProcess(id, stage);
 
     success();
 });

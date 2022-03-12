@@ -12,7 +12,11 @@ const GetProcess = async () => {
         const value = baseStage.find((item) => {
             return item.pre_id === preId;
         });
-        result.push(value);
+
+        const v = value.toJSON();
+        v.key = v.id;
+        v.title = v.name;
+        result.push(v);
         preId = value.id;
     }
 
@@ -32,7 +36,7 @@ const SaveProcess = async (title: any, preId: any) => {
         throw new OAuthException(40019);
     }
 
-    return item;
+    return item.toJSON();
 };
 
 const EditProcess = async (title: any, id: any) => {
@@ -48,7 +52,7 @@ const EditProcess = async (title: any, id: any) => {
     });
 };
 
-const DeleteProcess = async (id: any) => {
+const DeleteProcess = async (id: any, stage: any) => {
     await hasIdVertify(id);
 
     await BaseStage.destroy({
@@ -56,21 +60,22 @@ const DeleteProcess = async (id: any) => {
             id,
         },
     });
+    await UpdateProcess(stage);
 };
 
 const UpdateProcess = async (stage: any) => {
     const stageArr = [];
     for (let s of stage) {
         const value = {
-            id: s.key,
-            name: s.title,
+            id: s.id,
+            name: s.name,
             pre_id: s.pre_id,
         };
 
         stageArr.push(value);
     }
 
-    await BaseStage.bulkCreate(stageArr, { updateOnDuplicate: ["name", "pre_id"] });
+    await BaseStage.bulkCreate(stageArr, { updateOnDuplicate: ["pre_id"] });
 };
 
 const CountProcessData = async (grade: any) => {
