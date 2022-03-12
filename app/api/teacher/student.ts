@@ -1,3 +1,4 @@
+import { GetStudentMessage } from '../../validators/teacher/studentValidator';
 import * as Router from 'koa-router';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
@@ -14,6 +15,13 @@ router.get('/all_student', new Auth().verify, async (ctx: any) => {
         totalNum: students.length,
         students,
     })
+});
+
+router.get('/show_student/:studentId', new Auth().verify, async (ctx) => {
+    const { studentId } = ctx.params;
+    const student = await GetStudentMessage(studentId);
+
+    success({ ...student.toJSON() });
 });
 
 module.exports = router;

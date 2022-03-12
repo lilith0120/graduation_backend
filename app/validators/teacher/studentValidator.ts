@@ -53,6 +53,27 @@ const GetAllStudent = async (userId: any, body: any) => {
     return students;
 };
 
+const GetStudentMessage = async (studentId: any) => {
+    await hasStudentIdVertify(studentId);
+    await studentIdVertify(studentId);
+
+    const student = await Student.findOne({
+        where: {
+            id: studentId,
+        },
+        include: [
+            {
+                model: User,
+                attributes: ["user_id", "email"],
+            },
+            Profession,
+            Stage,
+        ],
+    });
+
+    return student;
+};
+
 const getTeacherId = async (userId: any) => {
     const teacher = await Teacher.findOne({
         where: {
@@ -67,6 +88,21 @@ const getTeacherId = async (userId: any) => {
     return teacher.toJSON().id;
 };
 
+const hasStudentIdVertify = async (studentId: any) => {
+    if (!studentId) {
+        throw new OAuthException(40021);
+    }
+};
+
+const studentIdVertify = async (studnetId: any) => {
+    const student = await Student.findByPk(studnetId);
+
+    if (!student) {
+        throw new OAuthException(40022);
+    }
+};
+
 export {
     GetAllStudent,
+    GetStudentMessage,
 };
