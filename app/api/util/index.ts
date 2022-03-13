@@ -1,4 +1,6 @@
 import * as Router from 'koa-router';
+import * as fs from 'fs';
+import * as path from 'path';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
@@ -42,7 +44,19 @@ router.get('/get_process/:teacherId', new Auth().verify, async (ctx) => {
 });
 
 router.post('/upload_file', new Auth().verify, async (ctx) => {
-    // 上传文件接口
+    const file: any = ctx.request.files.file;
+
+    const readStream = fs.createReadStream(file.path);
+    const timestamp = new Date().getTime();
+    const filePath = path.join(__dirname, '../../../assets/') + `${timestamp}-${file.name}`;
+    const remotePath = `http://81.71.128.138/files/${timestamp}-${file.name}`;
+
+    const upStream = fs.createWriteStream(filePath);
+    readStream.pipe(upStream);
+
+    success({
+        url: remotePath,
+    });
 });
 
 module.exports = router;
