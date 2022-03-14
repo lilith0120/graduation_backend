@@ -6,6 +6,7 @@ import Profession from "../../modules/profession";
 import File from "../../modules/file";
 import { vertifyId } from "..";
 import { RoleException } from "../../../core/http-exception";
+import { GetProcessMessage as getProcessList } from "../util/messageValidator";
 
 const GetStudentMessage = async (userId: any) => {
     await vertifyId(userId);
@@ -123,10 +124,53 @@ const GetFileMessage = async (fileId: any) => {
     return file.toJSON();
 };
 
+const GetProgressMessage = async (userId: any) => {
+    const student = await GetStudentMessage(userId);
+
+    const { id, TeacherId } = student;
+    const stages = await getProcessList(TeacherId);
+
+    const now = new Date();
+    const result = Promise.all(stages.map(async (item) => {
+        const begin = new Date(item.begin_at);
+        const end = new Date(item.end_at);
+        if (!item.begin_at || begin > now) {
+            item.status = "wait";
+        } else if (end < now) {
+            item.status = "finish";
+        } else {
+            item.status = "process";
+        }
+
+        if (item.status !== "wait") {
+            item.isDone = false;
+            const file = await File.findOne({
+                where: {
+                    StudentId: id,
+                    stage: item.id,
+                    status: 2, // 审核通过
+                },
+            });
+
+            if (file) {
+                item.isDone = true;
+                const f = file.toJSON();
+                item.file_id = f.id;
+                item.file_name = f.file_name;
+            }
+        }
+
+        return item;
+    }));
+
+    return result;
+};
+
 export {
     GetStudentMessage,
     GetAllStudent,
     PostFileMessage,
     GetAllFile,
     GetFileMessage,
+    GetProgressMessage,
 };

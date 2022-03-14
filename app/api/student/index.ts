@@ -3,7 +3,8 @@ import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
     GetStudentMessage, GetAllStudent,
-    PostFileMessage, GetAllFile, GetFileMessage
+    PostFileMessage, GetAllFile, GetFileMessage,
+    GetProgressMessage
 } from '../../validators/student/messageValidator';
 const router = new Router({
     prefix: '/api/student',
@@ -49,6 +50,15 @@ router.get('/file/:fileId', new Auth().verify, async (ctx) => {
     const file = await GetFileMessage(fileId);
 
     success({ ...file });
+});
+
+router.get('/progress', new Auth().verify, async (ctx: any) => {
+    const { id } = ctx.auth;
+    const progress = await GetProgressMessage(id);
+
+    success({
+        progress,
+    });
 });
 
 module.exports = router;
