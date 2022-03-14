@@ -5,8 +5,7 @@ import { OAuthException } from "../../../core/http-exception";
 import { sendConfig, recieveConfig } from "../../../config/email-config";
 import { setCode, getCode } from "../../../core/redis";
 
-const EmailValidator = async (body: any) => {
-    const userId = body?.userId;
+const EmailValidator = async (userId: any) => {
     await vertifyUserId(userId);
 
     const email = await vertifyEmail(userId);

@@ -7,7 +7,7 @@ const router = new Router({
     prefix: '/api/teacher',
 });
 
-router.get('/all_student', new Auth().verify, async (ctx: any) => {
+router.post('/all_student', new Auth().verify, async (ctx: any) => {
     const { id } = ctx.auth;
     const students = await GetAllStudent(id, ctx.request.body);
 

@@ -13,7 +13,7 @@ router.get('/', new Auth().verify, async (ctx: any) => {
     success({ ...teacher.toJSON() });
 });
 
-router.get('/all', new Auth().verify, async (ctx) => {
+router.post('/all', new Auth().verify, async (ctx) => {
     const { size, current, search } = ctx.request.body;
     const teachers = await GetAllTeacher(size, current, search);
 

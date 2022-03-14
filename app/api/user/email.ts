@@ -8,8 +8,9 @@ const router = new Router({
     prefix: '/api/user',
 });
 
-router.get('/email', async (ctx) => {
-    const email = await EmailValidator(ctx.request.body);
+router.get('/email/:userId', async (ctx) => {
+    const { userId } = ctx.params;
+    const email = await EmailValidator(userId);
 
     success({
         email,

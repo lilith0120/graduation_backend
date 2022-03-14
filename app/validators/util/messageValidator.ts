@@ -3,6 +3,7 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
 import { OAuthException } from "../../../core/http-exception";
+import * as moment from "moment";
 
 const GetGradeMessage = async () => {
     const grades = await Student.findAll({
@@ -59,6 +60,15 @@ const GetProcessMessage = async (teacherId: any) => {
         }
 
         const v = value.toJSON();
+        v.disabled = false;
+        const now = new Date();
+        const begin = new Date(v.begin_at);
+        const end = new Date(v.end_at);
+
+        if (now < begin || now > end || !v.begin_at) {
+            v.disabled = true;
+        }
+
         result.push(v);
         preId = v.id;
     }

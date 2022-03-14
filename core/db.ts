@@ -12,6 +12,10 @@ const sequelize = new Sequelize(db.dbName, db.user, db.password, {
     define: {
         underscored: true,
     },
+    dialectOptions: {
+        dateStrings: true,
+        typeCast: true
+    },
 });
 sequelize.sync({
     force: db.env === 'dev',
