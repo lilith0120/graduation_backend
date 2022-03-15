@@ -9,6 +9,7 @@ import Stage from './stage';
 class Student extends Model {
     grade: any;
     user_id: number;
+    id: number;
 };
 
 Student.init({

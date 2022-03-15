@@ -3,6 +3,7 @@ import Student from "../../modules/student";
 import User from "../../modules/user";
 import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
+import File from "../../modules/file";
 import { OAuthException } from "../../../core/http-exception";
 import { Op } from "sequelize";
 
@@ -74,6 +75,25 @@ const GetStudentMessage = async (studentId: any) => {
     return student;
 };
 
+const GetFileList = async (studentId: any) => {
+    const fileList = await File.findAll({
+        where: {
+            StudentId: studentId,
+        },
+        order: [
+            ["createdAt", "DESC"],
+        ],
+        include: [
+            {
+                model: Stage,
+                attributes: ["name"],
+            },
+        ],
+    });
+
+    return fileList;
+};
+
 const getTeacherId = async (userId: any) => {
     const teacher = await Teacher.findOne({
         where: {
@@ -105,4 +125,5 @@ const studentIdVertify = async (studnetId: any) => {
 export {
     GetAllStudent,
     GetStudentMessage,
+    GetFileList,
 };

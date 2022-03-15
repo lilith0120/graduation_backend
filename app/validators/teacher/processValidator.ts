@@ -169,6 +169,7 @@ const getTeacherId = async (id: any) => {
 };
 
 export {
+    getTeacherId,
     GetProcess,
     SaveProcess,
     EditProcess,

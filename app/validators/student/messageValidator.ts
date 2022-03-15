@@ -4,6 +4,7 @@ import User from "../../modules/user";
 import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import File from "../../modules/file";
+import Stage from "../../modules/stage";
 import { vertifyId } from "..";
 import { RoleException } from "../../../core/http-exception";
 import { GetProcessMessage as getProcessList } from "../util/messageValidator";
@@ -86,7 +87,7 @@ const PostFileMessage = async (userId: any, file: any) => {
         file_name,
         file_url,
         file_detail,
-        stage: file_stage,
+        StageId: file_stage,
         StudentId: student.id,
         TeacherId: student.TeacherId,
     });
@@ -103,14 +104,15 @@ const GetAllFile = async (id: any, body: any) => {
             file_name: {
                 [Op.substring]: search?.file_name ?? '',
             },
-            stage: {
-                [Op.substring]: search?.process_id ?? '',
-            },
             status: {
                 [Op.substring]: search?.file_status ?? '',
             },
+            StageId: {
+                [Op.substring]: search?.process_id ?? '',
+            },
             StudentId: student.id,
         },
+        include: [Stage]
     });
 
     return files;
@@ -147,7 +149,7 @@ const GetProgressMessage = async (userId: any) => {
             const file = await File.findOne({
                 where: {
                     StudentId: id,
-                    stage: item.id,
+                    StageId: item.id,
                     status: 2, // 审核通过
                 },
             });

@@ -1,8 +1,9 @@
-import { GetStudentMessage } from '../../validators/teacher/studentValidator';
 import * as Router from 'koa-router';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
-import { GetAllStudent } from '../../validators/teacher/studentValidator';
+import {
+    GetAllStudent, GetStudentMessage, GetFileList
+} from '../../validators/teacher/studentValidator';
 const router = new Router({
     prefix: '/api/teacher',
 });
@@ -22,6 +23,15 @@ router.get('/show_student/:studentId', new Auth().verify, async (ctx) => {
     const student = await GetStudentMessage(studentId);
 
     success({ ...student.toJSON() });
+});
+
+router.get('/file_list/:studentId', new Auth().verify, async (ctx) => {
+    const { studentId } = ctx.params;
+    const fileList = await GetFileList(studentId);
+
+    success({
+        fileList,
+    });
 });
 
 module.exports = router;

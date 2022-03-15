@@ -3,7 +3,7 @@ import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
     GetProcess, SaveProcess, EditProcess, DeleteProcess, UpdateProcess,
-    EditProcessTime
+    EditProcessTime,
 } from '../../validators/teacher/processValidator';
 const router = new Router({
     prefix: '/api/teacher/process',

@@ -1,7 +1,10 @@
 import * as Router from 'koa-router';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
-import { GetTeacherMessage, GetAllTeacher } from '../../validators/teacher/messageValidator';
+import {
+    GetTeacherMessage, GetAllTeacher,
+    GetProcessMessage, GetStudentNum, GetProgressDetail
+} from '../../validators/teacher/messageValidator';
 const router = new Router({
     prefix: '/api/teacher',
 });
@@ -20,6 +23,27 @@ router.post('/all', new Auth().verify, async (ctx) => {
     success({
         totalNum: teachers.length,
         teachers,
+    });
+});
+
+router.get('/progress', new Auth().verify, async (ctx: any) => {
+    const { id } = ctx.auth;
+    const progress = await GetProcessMessage(id);
+    const studentNum = await GetStudentNum(id);
+
+    success({
+        studentNum,
+        progress,
+    });
+});
+
+router.get('/progress_detail/:stageId', new Auth().verify, async (ctx: any) => {
+    const { id } = ctx.auth;
+    const { stageId } = ctx.params;
+    const progressDetail = await GetProgressDetail(id, stageId);
+
+    success({
+        progressDetail,
     });
 });
 

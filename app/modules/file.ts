@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from "../../core/db";
+import Stage from './stage';
 import Student from './student';
 import Teacher from './teacher';
 
@@ -23,10 +24,6 @@ File.init({
     file_detail: {
         type: DataTypes.TEXT,
     }, // 材料详细
-    stage: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    }, // 毕设阶段id
     status: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -45,5 +42,6 @@ File.init({
 
 File.belongsTo(Student);
 File.belongsTo(Teacher);
+File.belongsTo(Stage);
 
 export default File;
