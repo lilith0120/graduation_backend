@@ -65,6 +65,13 @@ const UpdateFileStatus = async (fileId: any, pass: any, comment: any) => {
 };
 
 const DownloadFile = async (fileId: any) => {
+    const file = await File.findByPk(fileId);
+    const f = file.toJSON();
+
+    if (f.status !== 0) {
+        return;
+    }
+
     await File.update({
         status: 1,
     }, {
