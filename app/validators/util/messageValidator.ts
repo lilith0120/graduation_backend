@@ -3,7 +3,7 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
 import { OAuthException } from "../../../core/http-exception";
-import * as moment from "moment";
+import { vertifyId } from "..";
 
 const GetGradeMessage = async () => {
     const grades = await Student.findAll({
@@ -35,9 +35,27 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetProcessMessage = async (teacherId: any) => {
-    await hasTeacherIdVertify(teacherId);
-    await teacherIdVertify(teacherId);
+const GetProcessMessage = async (userId: any, userType: any) => {
+    await vertifyId(userId);
+
+    let teacherId: number;
+    if (userType === 0) {
+        const student = await Student.findOne({
+            where: {
+                UserId: userId,
+            },
+        });
+        const stu = student.toJSON();
+        teacherId = stu.TeacherId;
+    } else if (userType === 1) {
+        const teacher = await Teacher.findOne({
+            where: {
+                UserId: userId,
+            },
+        })
+        const thr = teacher.toJSON();
+        teacherId = thr.id;
+    }
 
     const stage = await Stage.findAll({
         where: {

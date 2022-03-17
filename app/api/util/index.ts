@@ -34,9 +34,9 @@ router.get('/get_teacher', new Auth().verify, async () => {
     })
 });
 
-router.get('/get_process/:teacherId', new Auth().verify, async (ctx) => {
-    const { teacherId } = ctx.params;
-    const process = await GetProcessMessage(teacherId);
+router.get('/get_process', new Auth().verify, async (ctx: any) => {
+    const { id, userType } = ctx.auth;
+    const process = await GetProcessMessage(id, userType);
 
     success({
         process,
