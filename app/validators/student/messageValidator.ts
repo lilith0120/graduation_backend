@@ -30,6 +30,10 @@ const GetStudentMessage = async (userId: any) => {
                     },
                 ],
             },
+            {
+                model: Profession,
+                attributes: ["name"],
+            },
         ],
     });
 
