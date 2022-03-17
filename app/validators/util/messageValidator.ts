@@ -35,7 +35,7 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetProcessMessage = async (userId: any, userType: any) => {
+const GetProcessList = async (userId: any, userType: any) => {
     await vertifyId(userId);
 
     let teacherId: number;
@@ -56,6 +56,13 @@ const GetProcessMessage = async (userId: any, userType: any) => {
         const thr = teacher.toJSON();
         teacherId = thr.id;
     }
+
+    return await GetProcessMessage(teacherId);
+};
+
+const GetProcessMessage = async (teacherId: any) => {
+    await hasTeacherIdVertify(teacherId);
+    await teacherIdVertify(teacherId);
 
     const stage = await Stage.findAll({
         where: {
@@ -112,5 +119,6 @@ export {
     GetGradeMessage,
     GetProfessionMessage,
     GetTeacherMessage,
+    GetProcessList,
     GetProcessMessage,
 };

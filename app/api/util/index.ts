@@ -4,7 +4,7 @@ import * as path from 'path';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
-    GetGradeMessage, GetProfessionMessage, GetTeacherMessage, GetProcessMessage
+    GetGradeMessage, GetProfessionMessage, GetTeacherMessage, GetProcessList
 } from '../../validators/util/messageValidator';
 const router = new Router({
     prefix: '/api/util',
@@ -36,7 +36,7 @@ router.get('/get_teacher', new Auth().verify, async () => {
 
 router.get('/get_process', new Auth().verify, async (ctx: any) => {
     const { id, userType } = ctx.auth;
-    const process = await GetProcessMessage(id, userType);
+    const process = await GetProcessList(id, userType);
 
     success({
         process,
