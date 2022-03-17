@@ -116,7 +116,12 @@ const GetAllFile = async (id: any, body: any) => {
             },
             StudentId: student.id,
         },
-        include: [Stage]
+        include: [
+            {
+                model: Stage,
+                attributes: ["name"],
+            },
+        ],
     });
 
     return files;
