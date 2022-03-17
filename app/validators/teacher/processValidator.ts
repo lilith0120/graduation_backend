@@ -1,4 +1,4 @@
-import Stage from "../../modules/Stage";
+import Stage from "../../modules/stage";
 import BaseStage from "../../modules/baseStage";
 import Teacher from "../../modules/teacher";
 import { OAuthException } from "../../../core/http-exception";
