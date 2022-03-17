@@ -124,7 +124,14 @@ const GetAllFile = async (id: any, body: any) => {
         ],
     });
 
-    return files;
+    const result = files.map((item) => {
+        const file = item.toJSON();
+        file.stage_name = file.Stage.name;
+
+        return file;
+    });
+
+    return result;
 };
 
 const GetFileMessage = async (fileId: any) => {
