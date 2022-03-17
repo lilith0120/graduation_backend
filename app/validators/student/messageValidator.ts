@@ -136,7 +136,13 @@ const GetAllFile = async (id: any, body: any) => {
 
 const GetFileMessage = async (fileId: any) => {
     const file = await File.findByPk(fileId, {
-        include: [Teacher],
+        include: [
+            Teacher,
+            {
+                model: Stage,
+                attributes: ["name"],
+            },
+        ],
     });
 
     return file.toJSON();
