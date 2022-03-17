@@ -18,7 +18,7 @@ class OAuthException extends HttpException {
         super();
         this.msg = msg || codeMessage.getMessage(errorCode);
         this.errorCode = errorCode;
-        this.code = 400;
+        this.code = 200;
     }
 };
 
@@ -27,7 +27,7 @@ class Foribbiden extends HttpException {
         super();
         this.msg = codeMessage.getMessage(errorCode);
         this.errorCode = errorCode;
-        this.code = 403;
+        this.code = 401;
     }
 };
 
@@ -45,7 +45,7 @@ class RedisException extends HttpException {
         super();
         this.msg = msg || codeMessage.getMessage(errorCode);
         this.errorCode = errorCode;
-        this.code = 400;
+        this.code = 200;
     }
 };
 
@@ -54,7 +54,7 @@ class RoleException extends HttpException {
         super();
         this.msg = msg || codeMessage.getMessage(errorCode);
         this.errorCode = errorCode;
-        this.code = 400;
+        this.code = 200;
     };
 };
 
@@ -63,7 +63,7 @@ class SqlException extends HttpException {
         super();
         this.msg = msg || codeMessage.getMessage(errorCode);
         this.errorCode = errorCode;
-        this.code = 400;
+        this.code = 200;
     };
 };
 
