@@ -2,6 +2,8 @@ import { HttpException } from "../core/http-exception";
 
 const catchError = async (ctx: any, next: any) => {
     try {
+        ctx.set('Access-Control-Allow-Origin', "*");
+        ctx.set('Access-Control-Allow-Methods', "OPTIONS,GET,PUT,POST,PATCH,DELLETE");
         await next();
     } catch (error) {
         if (error instanceof HttpException) {
