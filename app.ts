@@ -6,7 +6,11 @@ import InitManager from './core/init';
 import catchError from './middlewares/exception';
 
 const app = new Koa();
-app.use(cors());
+app.use(cors({
+    origin: (ctx) => {
+        return '*'
+    }
+}));
 app.use(catchError);
 app.use(body({
     multipart: true,
