@@ -46,7 +46,7 @@ const GetAllTeacher = async (size = 10, current = 1, search: any) => {
         include: [
             {
                 model: User,
-                attributes: ["user_id"],
+                attributes: ["user_id", "email"],
                 where: {
                     user_id: {
                         [Op.substring]: search?.teacher_id ?? '',
