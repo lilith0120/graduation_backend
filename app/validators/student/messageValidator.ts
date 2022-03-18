@@ -84,19 +84,33 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
 };
 
 const PostFileMessage = async (userId: any, file: any) => {
-    const { file_name, file_stage, file_detail, file_url } = file;
+    const { file_id, file_name, file_stage, file_detail, file_url } = file;
     const student = await GetStudentMessage(userId);
 
-    const newFile = await File.create({
-        file_name,
-        file_url,
-        file_detail,
-        StageId: file_stage,
-        StudentId: student.id,
-        TeacherId: student.TeacherId,
-    });
+    let updateFile: any;
+    if (file_id === -1) {
+        updateFile = await File.create({
+            file_name,
+            file_url,
+            file_detail,
+            StageId: file_stage,
+            StudentId: student.id,
+            TeacherId: student.TeacherId,
+        });
+    } else {
+        updateFile = await File.update({
+            file_name,
+            file_url,
+            file_detail,
+            StageId: file_stage,
+        }, {
+            where: {
+                id: file_id,
+            },
+        });
+    }
 
-    return newFile.toJSON();
+    return updateFile.toJSON();
 };
 
 const GetAllFile = async (id: any, body: any) => {
