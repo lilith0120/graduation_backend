@@ -8,7 +8,7 @@ const router = new Router({
     prefix: '/api/teacher/review',
 });
 
-router.post('/all', new Auth().verify, async (ctx: any) => {
+router.post('/all', new Auth(1).verify, async (ctx: any) => {
     const { id } = ctx.auth;
     const { size, current, status } = ctx.request.body;
     const reviews = await GetReviewMessage(size, current, status, id);
@@ -18,7 +18,7 @@ router.post('/all', new Auth().verify, async (ctx: any) => {
     });
 });
 
-router.get('/:fileId', new Auth().verify, async (ctx) => {
+router.get('/:fileId', new Auth(1).verify, async (ctx) => {
     const { fileId } = ctx.params;
     const file = await GetFileMessage(fileId);
 
@@ -27,7 +27,7 @@ router.get('/:fileId', new Auth().verify, async (ctx) => {
     });
 });
 
-router.patch('/:fileId', new Auth().verify, async (ctx) => {
+router.patch('/:fileId', new Auth(1).verify, async (ctx) => {
     const { fileId } = ctx.params;
     const { pass, comment } = ctx.request.body;
     await UpdateFileStatus(fileId, pass, comment);
@@ -35,7 +35,7 @@ router.patch('/:fileId', new Auth().verify, async (ctx) => {
     success();
 });
 
-router.patch('/download/:fileId', new Auth().verify, async (ctx) => {
+router.patch('/download/:fileId', new Auth(1).verify, async (ctx) => {
     const { fileId } = ctx.params;
     await DownloadFile(fileId);
 

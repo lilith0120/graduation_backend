@@ -9,7 +9,7 @@ const router = new Router({
     prefix: '/api/admin/process',
 });
 
-router.get('/', new Auth().verify, async () => {
+router.get('/', new Auth(2).verify, async () => {
     const result = await GetProcess();
 
     success({
@@ -17,7 +17,7 @@ router.get('/', new Auth().verify, async () => {
     });
 });
 
-router.post('/add', new Auth().verify, async (ctx) => {
+router.post('/add', new Auth(2).verify, async (ctx) => {
     const { title, pre_id } = ctx.request.body;
     const item = await SaveProcess(title, pre_id);
 
@@ -28,7 +28,7 @@ router.post('/add', new Auth().verify, async (ctx) => {
     });
 });
 
-router.patch('/edit/:id', new Auth().verify, async (ctx) => {
+router.patch('/edit/:id', new Auth(2).verify, async (ctx) => {
     const { id } = ctx.params;
     const { title } = ctx.request.body;
     await EditProcess(title, id);
@@ -36,7 +36,7 @@ router.patch('/edit/:id', new Auth().verify, async (ctx) => {
     success();
 });
 
-router.delete('/delete/:id', new Auth().verify, async (ctx) => {
+router.delete('/delete/:id', new Auth(2).verify, async (ctx) => {
     const { id } = ctx.params;
     const { stage } = ctx.request.body;
     await DeleteProcess(id, stage);
@@ -44,14 +44,14 @@ router.delete('/delete/:id', new Auth().verify, async (ctx) => {
     success();
 });
 
-router.patch('/update', new Auth().verify, async (ctx) => {
+router.patch('/update', new Auth(2).verify, async (ctx) => {
     const { stage } = ctx.request.body;
     await UpdateProcess(stage);
 
     success();
 });
 
-router.get('/count/:grade', new Auth().verify, async (ctx) => {
+router.get('/count/:grade', new Auth(2).verify, async (ctx) => {
     const { grade } = ctx.params;
     const count = await CountProcessData(grade);
 
