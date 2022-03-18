@@ -49,7 +49,7 @@ router.post('/upload_file', new Auth().verify, async (ctx) => {
     const readStream = fs.createReadStream(file.path);
     const timestamp = new Date().getTime();
     const filePath = path.join(__dirname, '../../../assets/') + `${timestamp}-${file.name}`;
-    const remotePath = `http://81.71.128.138/files/${timestamp}-${file.name}`;
+    const remotePath = `http://81.71.128.138/assets/${timestamp}-${file.name}`;
 
     const upStream = fs.createWriteStream(filePath);
     readStream.pipe(upStream);
