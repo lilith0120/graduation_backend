@@ -60,7 +60,7 @@ const GetAllTeacher = async (size = 10, current = 1, search: any) => {
         const teacher = item.toJSON();
         teacher.email = teacher.User.email;
 
-        return item;
+        return teacher;
     });
 
     return result;
