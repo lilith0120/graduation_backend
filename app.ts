@@ -14,6 +14,7 @@ app.use(cors({
 app.use(catchError);
 app.use(body({
     multipart: true,
+    strict: false,
 }));
 app.use(parser());
 InitManager.initCore(app);
