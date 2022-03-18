@@ -80,7 +80,17 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
         ],
     });
 
-    return students;
+    const result = students.map((item) => {
+        const student = item.toJSON();
+
+        student.student_id = student.User.user_id;
+        student.profession_name = student.Profession.name;
+        student.teacher_name = student.Teacher.name;
+
+        return student;
+    });
+
+    return result;
 };
 
 const PostFileMessage = async (userId: any, file: any) => {

@@ -51,7 +51,18 @@ const GetAllStudent = async (userId: any, body: any) => {
         ],
     });
 
-    return students;
+    const result = students.map((item) => {
+        const student = item.toJSON();
+
+        student.profession_name = student.Profession.name;
+        student.stage_name = student.Stage.name;
+        student.email = student.User.email;
+        student.student_id = student.User.user_id;
+
+        return student;
+    });
+
+    return result;
 };
 
 const GetStudentMessage = async (studentId: any) => {
