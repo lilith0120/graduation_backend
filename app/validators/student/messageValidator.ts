@@ -98,7 +98,7 @@ const PostFileMessage = async (userId: any, file: any) => {
             TeacherId: student.TeacherId,
         });
     } else {
-        updateFile = await File.update({
+        await File.update({
             file_name,
             file_url,
             file_detail,
@@ -108,9 +108,11 @@ const PostFileMessage = async (userId: any, file: any) => {
                 id: file_id,
             },
         });
+
+        updateFile = file;
     }
 
-    return updateFile.toJSON();
+    return updateFile;
 };
 
 const GetAllFile = async (id: any, body: any) => {
