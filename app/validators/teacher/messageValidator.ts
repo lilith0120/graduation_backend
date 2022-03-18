@@ -56,7 +56,14 @@ const GetAllTeacher = async (size = 10, current = 1, search: any) => {
         ],
     });
 
-    return teachers;
+    const result = teachers.map((item) => {
+        const teacher = item.toJSON();
+        teacher.email = teacher.User.email;
+
+        return item;
+    });
+
+    return result;
 };
 
 const GetProcessMessage = async (userId: any) => {
