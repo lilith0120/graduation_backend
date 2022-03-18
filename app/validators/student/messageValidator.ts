@@ -87,7 +87,7 @@ const PostFileMessage = async (userId: any, file: any) => {
     const { file_name, file_stage, file_detail, file_url } = file;
     const student = await GetStudentMessage(userId);
 
-    await File.create({
+    const newFile = await File.create({
         file_name,
         file_url,
         file_detail,
@@ -95,6 +95,8 @@ const PostFileMessage = async (userId: any, file: any) => {
         StudentId: student.id,
         TeacherId: student.TeacherId,
     });
+
+    return newFile.toJSON();
 };
 
 const GetAllFile = async (id: any, body: any) => {

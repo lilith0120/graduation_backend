@@ -30,9 +30,11 @@ router.post('/all', new Auth().verify, async (ctx) => {
 router.post('/file', new Auth().verify, async (ctx: any) => {
     const { id } = ctx.auth;
     const { file } = ctx.request.body;
-    await PostFileMessage(id, file);
+    const newFile = await PostFileMessage(id, file);
 
-    success();
+    success({
+        newFile,
+    });
 });
 
 router.post('/all_file', new Auth().verify, async (ctx: any) => {
