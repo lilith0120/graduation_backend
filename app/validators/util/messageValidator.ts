@@ -9,6 +9,9 @@ const GetGradeMessage = async () => {
     const grades = await Student.findAll({
         attributes: ["grade"],
         group: ["grade"],
+        order: [
+            ["grade", "DESC"],
+        ],
     });
 
     const result = [];
