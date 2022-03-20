@@ -36,8 +36,8 @@ router.patch('/:fileId', new Auth(1).verify, async (ctx) => {
 });
 
 router.patch('/download/:fileId', new Auth(1).verify, async (ctx) => {
-    const { fileId } = ctx.params;
-    await DownloadFile(fileId);
+    const { fileIds } = ctx.params;
+    await DownloadFile(fileIds);
 
     success();
 });

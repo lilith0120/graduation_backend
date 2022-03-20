@@ -2,6 +2,7 @@ import Student from "../../modules/student";
 import File from "../../modules/file";
 import Stage from "../../modules/stage";
 import { getTeacherId } from "./processValidator";
+import { Op } from "sequelize";
 
 const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any) => {
     const teacherId = await getTeacherId(userId);
@@ -64,19 +65,15 @@ const UpdateFileStatus = async (fileId: any, pass: any, comment: any) => {
     });
 };
 
-const DownloadFile = async (fileId: any) => {
-    const file = await File.findByPk(fileId);
-    const f = file.toJSON();
-
-    if (f.status !== 0) {
-        return;
-    }
-
+const DownloadFile = async (fileIds: any) => {
     await File.update({
         status: 1,
     }, {
         where: {
-            id: fileId,
+            id: {
+                [Op.in]: fileIds,
+            },
+            status: 0,
         },
     });
 };
