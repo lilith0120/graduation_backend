@@ -33,7 +33,16 @@ const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any
         ],
     });
 
-    return files;
+    const result = files.map((item) => {
+        const file = item.toJSON();
+
+        file.student_name = file.Student.name;
+        file.stage_name = file.Stage.name;
+
+        return file;
+    });
+
+    return result;
 };
 
 const GetFileMessage = async (fileId: any) => {
