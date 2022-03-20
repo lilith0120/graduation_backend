@@ -19,8 +19,9 @@ router.get('/', new Auth(1).verify, async (ctx: any) => {
 });
 
 router.post('/add', new Auth(1).verify, async (ctx: any) => {
-    const { newStage, teacherId } = ctx.request.body;
-    const item = await SaveProcess(newStage, teacherId);
+    const { id } = ctx.auth;
+    const { newStage } = ctx.request.body;
+    const item = await SaveProcess(newStage, id);
 
     success({
         ...item,

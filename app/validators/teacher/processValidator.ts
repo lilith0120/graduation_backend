@@ -47,7 +47,8 @@ const GetProcess = async (id: any) => {
     return resultStage;
 };
 
-const SaveProcess = async (newStage: any, teacherId: any) => {
+const SaveProcess = async (newStage: any, userId: any) => {
+    const teacherId = await getTeacherId(userId);
     const { title, pre_id, parent_id } = newStage;
     await hasTitleVertify(title);
     await hasPreIdVertify(pre_id);
