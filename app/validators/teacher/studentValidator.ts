@@ -23,7 +23,14 @@ const GetAllStudent = async (userId: any, body: any) => {
         },
         TeacherId: teacherId,
     };
-    if (search?.stage_id) {
+    if (search?.stage_id && search.stage_id === "-1") {
+        studentWhere = {
+            ...studentWhere,
+            StageId: {
+                [Op.is]: null,
+            },
+        };
+    } else if (search?.stage_id) {
         studentWhere = {
             ...studentWhere,
             StageId: {
@@ -55,7 +62,7 @@ const GetAllStudent = async (userId: any, body: any) => {
         const student = item.toJSON();
 
         student.profession_name = student.Profession.name;
-        student.stage_name = student.Stage.name;
+        student.stage_name = student.Stage?.name ?? "未开始";
         student.email = student.User.email;
         student.student_id = student.User.user_id;
 
