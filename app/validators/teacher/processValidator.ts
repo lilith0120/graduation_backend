@@ -8,10 +8,9 @@ const GetProcess = async (id: any) => {
     const teacherId = await getTeacherId(id);
     const baseStage = await GetBaseProcess();
     const resultStage = Promise.all(baseStage.map(async (item) => {
-        const baseItem = item.toJSON();
         const stage = await Stage.findAll({
             where: {
-                parent_id: baseItem.id,
+                parent_id: item.id,
                 TeacherId: teacherId,
             },
         });
@@ -38,11 +37,11 @@ const GetProcess = async (id: any) => {
 
             return c;
         });
-        baseItem.key = baseItem.id;
-        baseItem.title = baseItem.name;
-        baseItem.children = children;
+        item.key = item.id;
+        item.title = item.name;
+        item.children = children;
 
-        return baseItem;
+        return item;
     }));
 
     return resultStage;
