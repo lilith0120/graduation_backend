@@ -18,17 +18,14 @@ class Auth {
                 throw new Foribbiden();
             };
 
+            let decode: any;
             try {
-                const decode: any = jwt.verify(token, auth.secretKey);
+                decode = jwt.verify(token, auth.secretKey);
 
                 ctx.auth = {
                     id: decode.uid,
                     userType: decode.scope,
                 };
-
-                if (decode.scope < this.level) {
-                    throw new Foribbiden(43002);
-                }
             } catch (error) {
                 if (error.name === 'TokenExpiredError') {
                     throw new Foribbiden(43001);
@@ -37,6 +34,9 @@ class Auth {
                 throw new Foribbiden();
             };
 
+            if (decode.scope < this.level) {
+                throw new Foribbiden(43002);
+            }
             await next();
         };
     }

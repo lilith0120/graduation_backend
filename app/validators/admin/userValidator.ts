@@ -9,7 +9,7 @@ const AddStudents = async (students: any) => {
     const studentsMessage = [];
 
     for (let s of students) {
-        const studentMessage = {
+        let studentMessage = {
             name: s.name,
             sex: s.sex,
             grade: s.grade,
@@ -22,12 +22,29 @@ const AddStudents = async (students: any) => {
                 user_type: 0,
             },
         };
+
+        const user = await User.findOne({
+            where: {
+                user_id: s.user_id,
+            },
+        });
+
+        if (user) {
+            await updateStudent(s, user.toJSON().id);
+
+            continue;
+        }
+
         studentsMessage.push(studentMessage);
     }
 
-    await Student.bulkCreate(studentsMessage, {
-        include: [User],
-    });
+    try {
+        await Student.bulkCreate(studentsMessage, {
+            include: [User],
+        });
+    } catch (err) {
+        throw new SqlException(err.parent.sqlMessage);
+    }
 };
 
 const DeleteStudents = async (students: any) => {
@@ -225,6 +242,17 @@ const teacherIdVertify = async (teacherId: any) => {
     if (!user) {
         throw new OAuthException(40024);
     }
+};
+
+const updateStudent = async (student: any, userId: any) => {
+    await Student.update({
+        TeacherId: student.teacher_id,
+        ProfessionId: student.profession_id,
+    }, {
+        where: {
+            UserId: userId,
+        },
+    });
 };
 
 export {
