@@ -100,7 +100,7 @@ const CountProcessData = async (grade: any) => {
         c = c.toJSON();
         const r = {
             value: c.value,
-            name: c.BaseStage.name,
+            name: c.BaseStage?.name ?? "未开始",
         };
         result.push(r);
     }
