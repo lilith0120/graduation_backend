@@ -96,8 +96,8 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
         const student = item.toJSON();
 
         student.student_id = student.User.user_id;
-        student.profession_name = student.Profession.name;
-        student.teacher_name = student.Teacher.name;
+        student.profession_name = student.Profession?.name;
+        student.teacher_name = student.Teacher?.name;
 
         return student;
     });
