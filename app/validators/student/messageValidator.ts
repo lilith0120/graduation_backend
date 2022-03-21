@@ -73,6 +73,7 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
         };
     }
 
+    const studentCount = await Student.count();
     const students = await Student.findAll({
         limit: size,
         offset: (current - 1) * size,
@@ -102,7 +103,10 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
         return student;
     });
 
-    return result;
+    return {
+        totalNum: studentCount,
+        students: result,
+    };
 };
 
 const PostFileMessage = async (userId: any, file: any) => {

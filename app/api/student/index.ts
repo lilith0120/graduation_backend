@@ -21,10 +21,7 @@ router.post('/all', new Auth().verify, async (ctx) => {
     const { size, current, search } = ctx.request.body;
     const students = await GetAllStudent(size, current, search);
 
-    success({
-        totalNum: students.length,
-        students,
-    });
+    success({ ...students });
 });
 
 router.post('/file', new Auth().verify, async (ctx: any) => {
