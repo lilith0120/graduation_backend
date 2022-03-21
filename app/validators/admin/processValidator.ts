@@ -95,15 +95,27 @@ const CountProcessData = async (grade: any) => {
         }],
     });
 
+    const nullCount = await Student.count({
+        where: {
+            BaseStageId: null,
+        },
+    });
     const result = [];
     for (let c of count) {
         c = c.toJSON();
+        if (!c.BaseStage?.name) {
+            continue;
+        }
         const r = {
             value: c.value,
-            name: c.BaseStage?.name ?? "未开始",
+            name: c.BaseStage.name,
         };
         result.push(r);
     }
+    result.push({
+        value: nullCount,
+        name: "未开始",
+    });
 
     return result;
 };
