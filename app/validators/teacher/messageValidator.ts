@@ -58,7 +58,9 @@ const GetAllTeacher = async (size = 10, current = 1, search: any) => {
 
     const result = teachers.map((item) => {
         const teacher = item.toJSON();
+
         teacher.email = teacher.User.email;
+        teacher.teacher_id = teacher.User.user_id;
 
         return teacher;
     });
