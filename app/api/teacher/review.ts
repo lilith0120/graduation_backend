@@ -13,10 +13,7 @@ router.post('/all', new Auth(1).verify, async (ctx: any) => {
     const { size, current, status } = ctx.request.body;
     const reviews = await GetReviewMessage(size, current, status, id);
 
-    success({
-        totalNums: reviews.length,
-        reviews,
-    });
+    success({ ...reviews });
 });
 
 router.get('/:fileId', new Auth(1).verify, async (ctx) => {

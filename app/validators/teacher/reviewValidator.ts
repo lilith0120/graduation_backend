@@ -17,6 +17,11 @@ const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any
         };
     }
 
+    const fileCount = await File.count({
+        where: {
+            TeacherId: teacherId,
+        },
+    });
     const files = await File.findAll({
         limit: size,
         offset: (current - 1) * size,
@@ -42,7 +47,10 @@ const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any
         return file;
     });
 
-    return result;
+    return {
+        totalNums: fileCount,
+        reviews: result,
+    };
 };
 
 const GetFileMessage = async (fileId: any) => {

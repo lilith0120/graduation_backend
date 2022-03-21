@@ -38,10 +38,7 @@ router.post('/all_file', new Auth().verify, async (ctx: any) => {
     const { id } = ctx.auth;
     const files = await GetAllFile(id, ctx.request.body);
 
-    success({
-        totalNum: files.length,
-        files,
-    });
+    success({ ...files });
 });
 
 router.get('/file/:fileId', new Auth().verify, async (ctx) => {

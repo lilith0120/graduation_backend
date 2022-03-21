@@ -12,10 +12,7 @@ router.post('/all_student', new Auth(1).verify, async (ctx: any) => {
     const { id } = ctx.auth;
     const students = await GetAllStudent(id, ctx.request.body);
 
-    success({
-        totalNum: students.length,
-        students,
-    })
+    success({ ...students })
 });
 
 router.get('/show_student/:studentId', new Auth(1).verify, async (ctx) => {

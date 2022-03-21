@@ -39,6 +39,11 @@ const GetAllStudent = async (userId: any, body: any) => {
         };
     }
 
+    const studentCount = await Student.count({
+        where: {
+            TeacherId: teacherId,
+        },
+    });
     const students = await Student.findAll({
         limit: size,
         offset: (current - 1) * size,
@@ -69,7 +74,10 @@ const GetAllStudent = async (userId: any, body: any) => {
         return student;
     });
 
-    return result;
+    return {
+        totalNum: studentCount,
+        students: result,
+    };
 };
 
 const GetStudentMessage = async (studentId: any) => {

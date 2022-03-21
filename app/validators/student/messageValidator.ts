@@ -147,6 +147,11 @@ const GetAllFile = async (id: any, body: any) => {
     const { size = 10, current = 1, search } = body;
     const student = await GetStudentMessage(id);
 
+    const fileCount = await File.count({
+        where: {
+            StudentId: student.id,
+        },
+    });
     const files = await File.findAll({
         limit: size,
         offset: (current - 1) * size,
@@ -177,7 +182,10 @@ const GetAllFile = async (id: any, body: any) => {
         return file;
     });
 
-    return result;
+    return {
+        totalNum: fileCount,
+        files: result,
+    };
 };
 
 const GetFileMessage = async (fileId: any) => {
