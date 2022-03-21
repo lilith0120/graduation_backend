@@ -122,6 +122,8 @@ const PostFileMessage = async (userId: any, file: any) => {
         updateFile = file;
     }
 
+    await updateStudentStage(student, file_stage);
+
     return updateFile;
 };
 
@@ -216,6 +218,25 @@ const GetProgressMessage = async (userId: any) => {
     }));
 
     return result;
+};
+
+const updateStudentStage = async (body: any, stage: any) => {
+    const { id, TeacherId, StageId } = body;
+    const stages = await getProcessList(TeacherId);
+
+    const nowPlace = stages.findIndex((item) => item.id === StageId);
+    const updatePlace = stages.findIndex((item) => item.id === stage);
+
+    if (nowPlace < updatePlace) {
+        await Student.update({
+            StageId: stage,
+            BaseStageId: stages[updatePlace].parent_id,
+        }, {
+            where: {
+                id,
+            },
+        });
+    }
 };
 
 export {
