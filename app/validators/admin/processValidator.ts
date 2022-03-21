@@ -98,6 +98,9 @@ const CountProcessData = async (grade: any) => {
     const nullCount = await Student.count({
         where: {
             BaseStageId: null,
+            grade: {
+                [Op.substring]: grade === "-1" ? "" : grade,
+            },
         },
     });
     const result = [];
