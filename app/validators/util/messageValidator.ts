@@ -4,6 +4,7 @@ import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
 import { OAuthException } from "../../../core/http-exception";
 import { vertifyId } from "..";
+import { GetProcess as GetBaseProcess } from "../admin/processValidator";
 
 const GetGradeMessage = async () => {
     const grades = await Student.findAll({
@@ -67,6 +68,7 @@ const GetProcessMessage = async (teacherId: any) => {
     await hasTeacherIdVertify(teacherId);
     await teacherIdVertify(teacherId);
 
+    const baseStage = await GetBaseProcess();
     const stage = await Stage.findAll({
         where: {
             TeacherId: teacherId,
@@ -75,14 +77,20 @@ const GetProcessMessage = async (teacherId: any) => {
 
     const result = [];
     let preId = -1;
-    let parentId = 1;
+    let current = 0;
+    let parentId = baseStage[current].id;
     while (result.length < stage.length) {
         const value = stage.find((item) => {
             return item.pre_id === preId && item.parent_id === parentId;
         });
 
         if (!value) {
-            parentId += 1;
+            current += 1;
+            if (current === baseStage.length) {
+                break;
+            }
+
+            parentId = baseStage[current].id;
             preId = -1;
             continue;
         }
