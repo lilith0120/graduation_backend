@@ -45,26 +45,38 @@ const GetStudentMessage = async (userId: any) => {
 };
 
 const GetAllStudent = async (size = 10, current = 1, search: any) => {
-    const students = await Student.findAll({
-        limit: size,
-        offset: (current - 1) * size,
-        where: {
-            name: {
-                [Op.substring]: search?.name ?? '',
-            },
-            sex: {
-                [Op.substring]: search?.sex ?? '',
-            },
-            grade: {
-                [Op.substring]: search?.grade ?? '',
-            },
+    let studentWhere: any = {
+        name: {
+            [Op.substring]: search?.name ?? '',
+        },
+        sex: {
+            [Op.substring]: search?.sex ?? '',
+        },
+        grade: {
+            [Op.substring]: search?.grade ?? '',
+        },
+    };
+    if (search?.profession_id) {
+        studentWhere = {
+            ...studentWhere,
             ProfessionId: {
                 [Op.substring]: search?.profession_id ?? '',
             },
+        };
+    }
+    if (search?.teacher_id) {
+        studentWhere = {
+            ...studentWhere,
             TeacherId: {
                 [Op.substring]: search?.teacher_id ?? '',
-            }
-        },
+            },
+        };
+    }
+
+    const students = await Student.findAll({
+        limit: size,
+        offset: (current - 1) * size,
+        where: studentWhere,
         include: [
             {
                 model: User,
