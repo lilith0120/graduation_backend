@@ -25,7 +25,7 @@ const AddStudents = async (students: any) => {
 
         const user = await User.findOne({
             where: {
-                user_id: s.user_id,
+                user_id: s.student_id,
             },
         });
 
@@ -53,7 +53,7 @@ const DeleteStudents = async (students: any) => {
 
     for (let s of students) {
         studentIds.push(s.id);
-        userIds.push(s.user_id);
+        userIds.push(s.student_id);
     }
 
     try {
