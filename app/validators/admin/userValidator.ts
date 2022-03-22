@@ -13,11 +13,12 @@ const AddStudents = async (students: any) => {
             name: s.name,
             sex: s.sex,
             grade: s.grade,
-            TeacherId: s.teacher_id,
-            ProfessionId: s.profession_id,
+            TeacherId: s?.teacher_id,
+            ProfessionId: s?.profession_id,
+            StageId: s?.stage_id,
             User: {
-                user_id: s.user_id,
-                user_pswd: s.user_id,
+                user_id: s.student_id,
+                user_pswd: s.student_id,
                 email: s?.email ?? "",
                 user_type: 0,
             },
@@ -137,14 +138,14 @@ const UpdateStudentMessage = async (id: any, form: any) => {
 const AddTeachers = async (teachers: any) => {
     const teachersMessage = [];
 
-    for (let s of teachers) {
+    for (let t of teachers) {
         const teacherMessage = {
-            name: s.name,
-            sex: s.sex,
+            name: t.name,
+            sex: t.sex,
             User: {
-                user_id: s.user_id,
-                user_pswd: s.user_id,
-                email: s?.email ?? "",
+                user_id: t.teacher_id,
+                user_pswd: t.teacher_id,
+                email: t?.email ?? "",
                 user_type: 1,
             },
         };
@@ -246,8 +247,9 @@ const teacherIdVertify = async (teacherId: any) => {
 
 const updateStudent = async (student: any, userId: any) => {
     await Student.update({
-        TeacherId: student.teacher_id,
-        ProfessionId: student.profession_id,
+        TeacherId: student?.teacher_id,
+        ProfessionId: student?.profession_id,
+        StageId: student?.stage_id,
     }, {
         where: {
             UserId: userId,
