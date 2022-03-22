@@ -143,8 +143,8 @@ const AddTeachers = async (teachers: any) => {
             name: t.name,
             sex: t.sex,
             User: {
-                user_id: t.teacher_id,
-                user_pswd: t.teacher_id,
+                user_id: t.teacher_id.toString(),
+                user_pswd: t.teacher_id.toString(),
                 email: t?.email ?? "",
                 user_type: 1,
             },
@@ -152,9 +152,13 @@ const AddTeachers = async (teachers: any) => {
         teachersMessage.push(teacherMessage);
     }
 
-    await Teacher.bulkCreate(teachersMessage, {
-        include: [User],
-    });
+    try {
+        await Teacher.bulkCreate(teachersMessage, {
+            include: [User],
+        });
+    } catch (err) {
+        throw new SqlException(err.parent.sqlMessage);
+    }
 };
 
 const GetTeacherMessage = async (teacherId: any) => {
