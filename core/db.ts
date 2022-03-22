@@ -19,6 +19,7 @@ const sequelize = new Sequelize(db.dbName, db.user, db.password, {
 });
 sequelize.sync({
     force: db.env === 'dev',
+    alter: true,
 });
 
 export default sequelize;

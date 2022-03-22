@@ -24,7 +24,7 @@ StuThrAss.init({
     }, // 学生答辩通过标志位
 }, {
     sequelize,
-    tableName: 'stuThrAss',
+    tableName: 'stu_thr_ass',
 });
 
 StuThrAss.belongsTo(Teacher);

@@ -5,6 +5,7 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import File from "../../modules/file";
 import Stage from "../../modules/stage";
+import ReviewFile from "../../modules/reviewFile";
 import { vertifyId } from "..";
 import { RoleException } from "../../../core/http-exception";
 import { GetProcessMessage as getProcessList } from "../util/messageValidator";
@@ -173,6 +174,9 @@ const GetAllFile = async (id: any, body: any) => {
                 attributes: ["name"],
             },
         ],
+        order: [
+            ["createdAt", "DESC"],
+        ],
     });
 
     const result = files.map((item) => {
@@ -207,9 +211,10 @@ const GetProgressMessage = async (userId: any) => {
 
     const { id, TeacherId } = student;
     const stages = await getProcessList(TeacherId);
+    let canReview = false; // 判断是否可以送审
 
     const now = new Date();
-    const result = Promise.all(stages.map(async (item) => {
+    const result = Promise.all(stages.map(async (item, index) => {
         const begin = new Date(item.begin_at);
         const end = new Date(item.end_at);
         if (!item.begin_at || begin > now) {
@@ -235,11 +240,18 @@ const GetProgressMessage = async (userId: any) => {
                 const f = file.toJSON();
                 item.file_id = f.id;
                 item.file_name = f.file_name;
+
+                if (index === stages.length - 1) {
+                    canReview = true;
+                }
             }
         }
 
         return item;
     }));
+
+    const reviewMsg = await getReviewMessage(id, canReview);
+    (await result).push(reviewMsg);
 
     return result;
 };
@@ -261,6 +273,35 @@ const updateStudentStage = async (body: any, stage: any) => {
             },
         });
     }
+};
+
+const getReviewMessage = async (studentId: any, canReview = false) => {
+    let msg: any = {
+        id: 0,
+        name: "送审阶段",
+        status: "wait",
+    };
+
+    if (canReview) {
+        msg.status = "process";
+        msg.isDone = false;
+        const review = await ReviewFile.findOne({
+            where: {
+                StudentId: studentId,
+                status: 2, // 审核通过
+            }
+        });
+
+        if (review) {
+            msg.status = "finish";
+            msg.isDone = true;
+            const r = review.toJSON();
+            msg.file_id = r.id;
+            msg.file_name = r.file_name;
+        }
+    }
+
+    return msg;
 };
 
 export {

@@ -31,7 +31,7 @@ ReviewFile.init({
     }, // 审核状态
 }, {
     sequelize,
-    tableName: 'reviewFile',
+    tableName: 'review_file',
 });
 
 ReviewFile.belongsTo(Teacher);
