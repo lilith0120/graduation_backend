@@ -32,6 +32,7 @@ const GetTeacherMessage = async (userId: any) => {
 };
 
 const GetAllTeacher = async (size = 10, current = 1, search: any) => {
+    const teacherCount = await Teacher.count();
     const teachers = await Teacher.findAll({
         limit: size,
         offset: (current - 1) * size,
@@ -65,7 +66,10 @@ const GetAllTeacher = async (size = 10, current = 1, search: any) => {
         return teacher;
     });
 
-    return result;
+    return {
+        totalNum: teacherCount,
+        teachers: result,
+    };
 };
 
 const GetProcessMessage = async (userId: any) => {

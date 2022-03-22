@@ -20,10 +20,7 @@ router.post('/all', new Auth(1).verify, async (ctx) => {
     const { size, current, search } = ctx.request.body;
     const teachers = await GetAllTeacher(size, current, search);
 
-    success({
-        totalNum: teachers.length,
-        teachers,
-    });
+    success({ ...teachers });
 });
 
 router.get('/progress', new Auth(1).verify, async (ctx: any) => {

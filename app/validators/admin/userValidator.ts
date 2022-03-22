@@ -15,11 +15,10 @@ const AddStudents = async (students: any) => {
             grade: s.grade,
             TeacherId: s?.teacher_id,
             ProfessionId: s?.profession_id,
-            StageId: s?.stage_id,
             User: {
                 user_id: s.student_id,
                 user_pswd: s.student_id,
-                email: s?.email ?? "",
+                email: s?.email,
                 user_type: 0,
             },
         };
@@ -145,7 +144,7 @@ const AddTeachers = async (teachers: any) => {
             User: {
                 user_id: t.teacher_id.toString(),
                 user_pswd: t.teacher_id.toString(),
-                email: t?.email ?? "",
+                email: t?.email,
                 user_type: 1,
             },
         };
@@ -253,7 +252,6 @@ const updateStudent = async (student: any, userId: any) => {
     await Student.update({
         TeacherId: student?.teacher_id,
         ProfessionId: student?.profession_id,
-        StageId: student?.stage_id,
     }, {
         where: {
             UserId: userId,
