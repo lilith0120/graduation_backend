@@ -67,7 +67,7 @@ const DeleteStudents = async (students: any) => {
 
             await User.destroy({
                 where: {
-                    id: userIds,
+                    user_id: userIds,
                 },
                 transaction: t,
             });
