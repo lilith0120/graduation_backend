@@ -16,8 +16,8 @@ const AddStudents = async (students: any) => {
             TeacherId: s?.teacher_id,
             ProfessionId: s?.profession_id,
             User: {
-                user_id: s.student_id,
-                user_pswd: s.student_id,
+                user_id: s.student_id.toString(),
+                user_pswd: s.student_id.toString(),
                 email: s?.email,
                 user_type: 0,
             },
@@ -25,7 +25,7 @@ const AddStudents = async (students: any) => {
 
         const user = await User.findOne({
             where: {
-                user_id: s.student_id,
+                user_id: s.student_id.toString(),
             },
         });
 
@@ -43,7 +43,7 @@ const AddStudents = async (students: any) => {
             include: [User],
         });
     } catch (err) {
-        throw new SqlException(err.parent.sqlMessage);
+        throw new SqlException(err);
     }
 };
 
@@ -156,7 +156,7 @@ const AddTeachers = async (teachers: any) => {
             include: [User],
         });
     } catch (err) {
-        throw new SqlException(err.parent.sqlMessage);
+        throw new SqlException(err);
     }
 };
 
