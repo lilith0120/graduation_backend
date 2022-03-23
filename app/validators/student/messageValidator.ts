@@ -110,7 +110,7 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
 };
 
 const PostFileMessage = async (userId: any, file: any) => {
-    const { file_id, file_name, file_stage, file_detail, file_url } = file;
+    const { file_id, file_name, file_stage, file_detail, file_url, is_review } = file;
     const student = await GetStudentMessage(userId);
 
     let updateFile: any;
@@ -119,6 +119,7 @@ const PostFileMessage = async (userId: any, file: any) => {
             file_name,
             file_url,
             file_detail,
+            is_review,
             StageId: file_stage,
             StudentId: student.id,
             TeacherId: student.TeacherId,
@@ -128,6 +129,7 @@ const PostFileMessage = async (userId: any, file: any) => {
             file_name,
             file_url,
             file_detail,
+            is_review,
             StageId: file_stage,
         }, {
             where: {
