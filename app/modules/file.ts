@@ -29,6 +29,11 @@ File.init({
         allowNull: false,
         defaultValue: 0, // 0：未审核
     }, // 审核状态
+    is_review: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    }, // 是否送审
     review: {
         type: DataTypes.TEXT,
     }, // 指导老师评论

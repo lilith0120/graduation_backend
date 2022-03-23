@@ -35,11 +35,6 @@ Student.init({
         type: DataTypes.STRING(20),
         allowNull: false,
     }, // 年级
-    is_review: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-    }, // 是否送审
     // email: {
     //     type: DataTypes.STRING(255),
     // }, // 邮箱
