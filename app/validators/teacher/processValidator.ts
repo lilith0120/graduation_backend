@@ -8,20 +8,21 @@ const GetProcess = async (id: any) => {
     const teacherId = await getTeacherId(id);
     const baseStage = await GetBaseProcess();
     const resultStage = Promise.all(baseStage.map(async (item) => {
-        let stage = await Stage.findAll({
+        const stage = await Stage.findAll({
             where: {
                 parent_id: item.id,
                 TeacherId: teacherId,
             },
         });
 
-        if (!stage) {
+        if (!stage || stage.length === 0) {
             const newStage = {
                 title: item.name,
                 pre_id: -1,
                 parent_id: item.id,
             }
-            stage = await SaveProcess(newStage, id);
+            const newItem = await SaveProcess(newStage, id);
+            stage.push(newItem);
         }
 
         let preId = -1;
