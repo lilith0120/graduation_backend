@@ -17,11 +17,9 @@ StuThrAss.init({
         allowNull: false,
         defaultValue: false,
     }, // 答辩老师标志位
-    pass: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-    }, // 学生答辩通过标志位
+    status: {
+        type: DataTypes.INTEGER,
+    }, // 学生答辩标志位
 }, {
     sequelize,
     tableName: 'stu_thr_ass',

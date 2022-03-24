@@ -9,6 +9,7 @@ const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any
 
     let fileWhere: any = {
         TeacherId: teacherId,
+        is_review: false,
     };
     if (status !== -1) {
         fileWhere = {

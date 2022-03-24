@@ -2,9 +2,11 @@ import Student from "../../modules/student";
 import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
+import File from "../../modules/file";
 import { OAuthException } from "../../../core/http-exception";
 import { vertifyId } from "..";
 import { GetProcess as GetBaseProcess } from "../admin/processValidator";
+import { Op } from 'sequelize';
 
 const GetGradeMessage = async () => {
     const grades = await Student.findAll({
@@ -43,6 +45,7 @@ const GetProcessList = async (userId: any, userType: any) => {
     await vertifyId(userId);
 
     let teacherId: number;
+    let hasReview = false;
     if (userType === 0) {
         const student = await Student.findOne({
             where: {
@@ -51,6 +54,7 @@ const GetProcessList = async (userId: any, userType: any) => {
         });
         const stu = student.toJSON();
         teacherId = stu.TeacherId;
+        hasReview = await hasReviewFile(stu.id);
     } else if (userType === 1) {
         const teacher = await Teacher.findOne({
             where: {
@@ -61,10 +65,10 @@ const GetProcessList = async (userId: any, userType: any) => {
         teacherId = thr.id;
     }
 
-    return await GetProcessMessage(teacherId);
+    return await GetProcessMessage(teacherId, hasReview);
 };
 
-const GetProcessMessage = async (teacherId: any) => {
+const GetProcessMessage = async (teacherId: any, hasReview = false) => {
     await hasTeacherIdVertify(teacherId);
     await teacherIdVertify(teacherId);
 
@@ -109,6 +113,8 @@ const GetProcessMessage = async (teacherId: any) => {
         preId = v.id;
     }
 
+    result[result.length - 1].disabled = result[result.length - 1].disabled || hasReview;
+
     return result;
 };
 
@@ -123,6 +129,24 @@ const teacherIdVertify = async (teacherId: any) => {
 
     if (!teacher) {
         throw new OAuthException(40024);
+    }
+};
+
+const hasReviewFile = async (studentId: any) => {
+    const file = await File.findOne({
+        where: {
+            StudentId: studentId,
+            is_review: true,
+            status: {
+                [Op.ne]: 3, // 如果审核状态不为审核驳回，就不允许再提交
+            }
+        }
+    });
+
+    if (file) {
+        return true;
+    } else {
+        return false;
     }
 };
 

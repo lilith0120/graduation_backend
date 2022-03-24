@@ -5,6 +5,7 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import File from "../../modules/file";
 import Stage from "../../modules/stage";
+import StuThrAss from "../../modules/stuThrAss";
 import { vertifyId } from "..";
 import { RoleException } from "../../../core/http-exception";
 import { GetProcessMessage as getProcessList } from "../util/messageValidator";
@@ -124,6 +125,10 @@ const PostFileMessage = async (userId: any, file: any) => {
             StudentId: student.id,
             TeacherId: student.TeacherId,
         });
+
+        if (is_review) {
+            await updateReviewTeacherStage(student.id);
+        }
     } else {
         await File.update({
             file_name,
@@ -266,6 +271,16 @@ const updateStudentStage = async (body: any, stage: any) => {
             },
         });
     }
+};
+
+const updateReviewTeacherStage = async (studentId: any) => {
+    await StuThrAss.update({
+        status: null,
+    }, {
+        where: {
+            StudentId: studentId,
+        },
+    });
 };
 
 export {
