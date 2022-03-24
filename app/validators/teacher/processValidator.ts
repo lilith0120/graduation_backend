@@ -37,7 +37,11 @@ const GetProcess = async (id: any) => {
         }
 
         const children = result.map((i) => {
-            const c = i.toJSON();
+            let c = i;
+            if (typeof (i.toJSON()) === "function") {
+                c = i.toJSON();
+            }
+
             c.key = `${c.parent_id}-${c.id}`;
             c.title = c.name;
 
