@@ -18,9 +18,7 @@ const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any
     }
 
     const fileCount = await File.count({
-        where: {
-            TeacherId: teacherId,
-        },
+        where: fileWhere,
     });
     const files = await File.findAll({
         limit: size,
