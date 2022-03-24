@@ -161,6 +161,7 @@ const GetProgressDetail = async (userId: any, stageId: any) => {
             item.file_id = f.id;
             item.file_url = f.file_url;
             item.file_name = f.file_name;
+            item.is_review = f.is_review;
 
             if (f.status === 2) {
                 item.isFinish = true;
