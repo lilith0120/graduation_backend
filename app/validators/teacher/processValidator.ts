@@ -38,7 +38,7 @@ const GetProcess = async (id: any) => {
 
         const children = result.map((i) => {
             let c = i;
-            if (typeof (i.toJSON()) === "function") {
+            if (typeof (i.toJSON) === "function") {
                 c = i.toJSON();
             }
 
