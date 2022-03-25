@@ -3,7 +3,9 @@ import User from "../../modules/user";
 import Student from "../../modules/student";
 import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
+import StuThrAss from "../../modules/stuThrAss";
 import { OAuthException, SqlException } from "../../../core/http-exception";
+import { UpdateAssMessage } from "../util/messageValidator";
 
 const AddStudents = async (students: any) => {
     const studentsMessage = [];
@@ -81,7 +83,7 @@ const GetStudentMessage = async (studentId: any) => {
     await hasStudentIdVertify(studentId);
     await studentIdVertify(studentId);
 
-    const student = await Student.findOne({
+    let student: any = await Student.findOne({
         where: {
             id: studentId,
         },
@@ -94,6 +96,26 @@ const GetStudentMessage = async (studentId: any) => {
             Profession,
         ]
     });
+    student = student.toJSON();
+
+    const reviewTeacher = await getReviewTeacher(studentId);
+    if (reviewTeacher) {
+        student.review_teacher = reviewTeacher.Teacher.name;
+        student.review_id = reviewTeacher.TeacherId;
+    }
+
+    const groupTeachers = await getGroupTeacher(studentId);
+    if (groupTeachers) {
+        const group = [];
+        const groupId = [];
+        groupTeachers.forEach((item) => {
+            const groupTeacher = item.toJSON();
+            group.push(groupTeacher.Teacher.name);
+            groupId.push(groupTeacher.TeacherId);
+        });
+        student.group = group;
+        student.review_group = groupId;
+    }
 
     return student;
 };
@@ -128,6 +150,9 @@ const UpdateStudentMessage = async (id: any, form: any) => {
                 },
                 transaction: t,
             });
+
+            await UpdateAssMessage([id], [form.review_id], false);
+            await UpdateAssMessage([id], form.review_group, true);
         });
     } catch (err) {
         throw new SqlException(err.message);
@@ -257,6 +282,48 @@ const updateStudent = async (student: any, userId: any) => {
             UserId: userId,
         },
     });
+};
+
+const getReviewTeacher = async (studentId: any) => {
+    const teacher = await StuThrAss.findOne({
+        where: {
+            StudentId: studentId,
+            is_group: false,
+        },
+        include: [
+            {
+                model: Teacher,
+                attributes: ["name"],
+            },
+        ],
+    });
+
+    if (!teacher) {
+        return;
+    }
+
+    return teacher.toJSON();
+};
+
+const getGroupTeacher = async (studentId: any) => {
+    const teachers = await StuThrAss.findAll({
+        where: {
+            StudentId: studentId,
+            is_group: true,
+        },
+        include: [
+            {
+                model: Teacher,
+                attributes: ["name"],
+            },
+        ],
+    });
+
+    if (!teachers) {
+        return;
+    }
+
+    return teachers;
 };
 
 export {

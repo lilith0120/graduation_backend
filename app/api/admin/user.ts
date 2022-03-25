@@ -27,7 +27,7 @@ router.get('/show_student/:id', new Auth(2).verify, async (ctx) => {
     const { id } = ctx.params;
     const student = await GetStudentMessage(id);
 
-    success({ ...student.toJSON() });
+    success({ ...student });
 });
 
 router.patch('/edit_student/:id', new Auth(2).verify, async (ctx) => {

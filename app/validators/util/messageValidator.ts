@@ -4,7 +4,7 @@ import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
 import File from "../../modules/file";
 import StuThrAss from "../../modules/stuThrAss";
-import { OAuthException } from "../../../core/http-exception";
+import { OAuthException, SqlException } from "../../../core/http-exception";
 import { vertifyId } from "..";
 import { GetProcess as GetBaseProcess } from "../admin/processValidator";
 import { Op } from 'sequelize';
@@ -43,10 +43,29 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetStudentMessage = async () => {
+const GetStudentMessage = async (is_review: any) => {
     const students = await Student.findAll({
         attributes: ["id", "name"],
     });
+
+    if (is_review) {
+        const reviewStudents = await StuThrAss.findAll({
+            where: {
+                is_group: false,
+            },
+        });
+
+        const result = students.filter((item) => {
+            const student = item.toJSON();
+            const hasReview = reviewStudents.find((review) => review.toJSON().StudentId === student.id);
+
+            if (!hasReview) {
+                return student;
+            }
+        });
+
+        return result;
+    }
 
     return students;
 };
@@ -177,23 +196,33 @@ const PostStudentMessage = async (selectTeachers: any) => {
 };
 
 const UpdateAssMessage = async (selectStudents: any, selectTeachers: any, is_group: boolean) => {
-    const assData = [];
-    for (let stu of selectStudents) {
-        for (let thr of selectTeachers) {
-            const value = {
-                StudentId: stu,
-                TeacherId: thr,
-                is_group,
-            };
+    try {
+        await sequelize.transaction(async (t) => {
+            await deleteAssMessage(selectStudents, selectTeachers, is_group, t);
 
-            const hasAss = await hasAssMessage(stu, thr, is_group);
-            if (!hasAss) {
-                assData.push(value);
+            const assData = [];
+            for (let stu of selectStudents) {
+                for (let thr of selectTeachers) {
+                    const value = {
+                        StudentId: stu,
+                        TeacherId: thr,
+                        is_group,
+                    };
+
+                    const hasAss = await hasAssMessage(stu, thr, is_group, t);
+                    if (!hasAss) {
+                        assData.push(value);
+                    }
+                }
             }
-        }
-    }
 
-    await StuThrAss.bulkCreate(assData);
+            await StuThrAss.bulkCreate(assData, {
+                transaction: t,
+            });
+        });
+    } catch (err) {
+        throw new SqlException(err.message);
+    };
 };
 
 const hasTeacherIdVertify = async (teacherId: any) => {
@@ -228,13 +257,38 @@ const hasReviewFile = async (studentId: any) => {
     }
 };
 
-const hasAssMessage = async (studentId: any, teacherId: any, is_group: boolean) => {
+const deleteAssMessage = async (selectStudents: any, selectTeachers: any, is_group: any, t: any) => {
+    await StuThrAss.destroy({
+        where: {
+            TeacherId: selectTeachers,
+            StudentId: {
+                [Op.notIn]: selectStudents,
+            },
+            is_group,
+        },
+        transaction: t,
+    });
+
+    await StuThrAss.destroy({
+        where: {
+            StudentId: selectStudents,
+            TeacherId: {
+                [Op.notIn]: selectTeachers,
+            },
+            is_group,
+        },
+        transaction: t,
+    });
+};
+
+const hasAssMessage = async (studentId: any, teacherId: any, is_group: any, t: any) => {
     const ass = await StuThrAss.findOne({
         where: {
             StudentId: studentId,
             TeacherId: teacherId,
             is_group,
         },
+        transaction: t,
     });
 
     if (ass) {
