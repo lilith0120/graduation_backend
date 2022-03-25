@@ -3,10 +3,12 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import Stage from "../../modules/stage";
 import File from "../../modules/file";
+import StuThrAss from "../../modules/stuThrAss";
 import { OAuthException } from "../../../core/http-exception";
 import { vertifyId } from "..";
 import { GetProcess as GetBaseProcess } from "../admin/processValidator";
 import { Op } from 'sequelize';
+import sequelize from "../../../core/db";
 
 const GetGradeMessage = async () => {
     const grades = await Student.findAll({
@@ -39,6 +41,14 @@ const GetTeacherMessage = async () => {
     });
 
     return teachers;
+};
+
+const GetStudentMessage = async () => {
+    const students = await Student.findAll({
+        attributes: ["id", "name"],
+    });
+
+    return students;
 };
 
 const GetProcessList = async (userId: any, userType: any) => {
@@ -118,6 +128,74 @@ const GetProcessMessage = async (teacherId: any, hasReview = false) => {
     return result;
 };
 
+const PostTeacherMessage = async (selectStudents: any) => {
+    const studentLength = selectStudents.length;
+    const teachers = await StuThrAss.findAll({
+        where: {
+            StudentId: selectStudents,
+        },
+        group: "teacher_id",
+        attributes: [
+            [sequelize.fn('COUNT', sequelize.col('teacher_id')), 'value'],
+            "teacher_id",
+        ],
+    });
+
+    const result = [];
+    teachers.forEach((item: any) => {
+        const teacher = item.toJSON();
+        if (teacher.value === studentLength) {
+            result.push(teacher.teacher_id);
+        }
+    });
+
+    return result;
+};
+
+const PostStudentMessage = async (selectTeachers: any) => {
+    const teacherLength = selectTeachers.length;
+    const students = await StuThrAss.findAll({
+        where: {
+            TeacherId: selectTeachers,
+        },
+        group: "student_id",
+        attributes: [
+            [sequelize.fn('COUNT', sequelize.col('student_id')), 'value'],
+            "student_id",
+        ],
+    });
+
+    const result = [];
+    students.forEach((item: any) => {
+        const student = item.toJSON();
+        if (student.value === teacherLength) {
+            result.push(student.student_id);
+        }
+    });
+
+    return result;
+};
+
+const UpdateAssMessage = async (selectStudents: any, selectTeachers: any, is_group: boolean) => {
+    const assData = [];
+    for (let stu of selectStudents) {
+        for (let thr of selectTeachers) {
+            const value = {
+                StudentId: stu,
+                TeacherId: thr,
+                is_group,
+            };
+
+            const hasAss = await hasAssMessage(stu, thr, is_group);
+            if (!hasAss) {
+                assData.push(value);
+            }
+        }
+    }
+
+    await StuThrAss.bulkCreate(assData);
+};
+
 const hasTeacherIdVertify = async (teacherId: any) => {
     if (!teacherId) {
         throw new OAuthException(40023);
@@ -150,10 +228,30 @@ const hasReviewFile = async (studentId: any) => {
     }
 };
 
+const hasAssMessage = async (studentId: any, teacherId: any, is_group: boolean) => {
+    const ass = await StuThrAss.findOne({
+        where: {
+            StudentId: studentId,
+            TeacherId: teacherId,
+            is_group,
+        },
+    });
+
+    if (ass) {
+        return true;
+    }
+
+    return false;
+};
+
 export {
     GetGradeMessage,
     GetProfessionMessage,
     GetTeacherMessage,
+    GetStudentMessage,
     GetProcessList,
     GetProcessMessage,
+    PostTeacherMessage,
+    PostStudentMessage,
+    UpdateAssMessage,
 };

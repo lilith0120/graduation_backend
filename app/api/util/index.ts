@@ -4,7 +4,8 @@ import * as path from 'path';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
-    GetGradeMessage, GetProfessionMessage, GetTeacherMessage, GetProcessList
+    GetGradeMessage, GetProfessionMessage, GetTeacherMessage, GetStudentMessage, GetProcessList,
+    PostTeacherMessage, PostStudentMessage, UpdateAssMessage
 } from '../../validators/util/messageValidator';
 const router = new Router({
     prefix: '/api/util',
@@ -34,6 +35,14 @@ router.get('/get_teacher', new Auth().verify, async () => {
     })
 });
 
+router.get('/get_student', new Auth().verify, async () => {
+    const students = await GetStudentMessage();
+
+    success({
+        students,
+    });
+});
+
 router.get('/get_process', new Auth().verify, async (ctx: any) => {
     const { id, userType } = ctx.auth;
     const process = await GetProcessList(id, userType);
@@ -57,6 +66,31 @@ router.post('/upload_file', new Auth().verify, async (ctx) => {
     success({
         url: remotePath,
     });
+});
+
+router.post('/get_teacher', new Auth().verify, async (ctx) => {
+    const { selectStudents } = ctx.request.body;
+    const teachers = await PostTeacherMessage(selectStudents);
+
+    success({
+        teachers,
+    });
+});
+
+router.post('/get_student', new Auth().verify, async (ctx) => {
+    const { selectTeachers } = ctx.request.body;
+    const students = await PostStudentMessage(selectTeachers);
+
+    success({
+        students,
+    });
+});
+
+router.post('/update_ass', new Auth().verify, async (ctx) => {
+    const { selectTeachers, selectStudents, isGroup } = ctx.request.body;
+    await UpdateAssMessage(selectStudents, selectTeachers, isGroup);
+
+    success();
 });
 
 module.exports = router;
