@@ -1,4 +1,5 @@
 import Student from "../../modules/student";
+import Teacher from "../../modules/teacher";
 import File from "../../modules/file";
 import Stage from "../../modules/stage";
 import StuThrAss from "../../modules/stuThrAss";
@@ -108,6 +109,34 @@ const DownloadFile = async (fileIds: any) => {
     });
 };
 
+const GetTeacherList = async (fileId: any) => {
+    const student = await getStudentByFileId(fileId);
+    const { Student: { name }, createdAt, StudentId: id } = student;
+
+    let list = [];
+    list.push({
+        userId: id,
+        time: createdAt,
+        user: name,
+        status: "提交文件",
+    });
+
+    const reviewTeacher = await getReviewTeacher(id);
+    if (reviewTeacher) {
+        list.push(reviewTeacher);
+    }
+
+    const reviewGroup = await getReviewGroup(id);
+    if (reviewGroup) {
+        list = [
+            ...list,
+            ...reviewGroup,
+        ];
+    }
+
+    return list;
+};
+
 const getStudentId = async (teacherId: any) => {
     const students = await StuThrAss.findAll({
         where: {
@@ -126,9 +155,84 @@ const getStudentId = async (teacherId: any) => {
     return studentIds;
 };
 
+const getStudentByFileId = async (fileId: any) => {
+    const student = await File.findByPk(fileId, {
+        include: [
+            {
+                model: Student,
+                attributes: ["name"],
+            },
+        ],
+    });
+
+    return student.toJSON();
+};
+
+const getReviewTeacher = async (studentId: any) => {
+    const teacher = await StuThrAss.findOne({
+        where: {
+            StudentId: studentId,
+            is_group: false,
+        },
+        include: [
+            {
+                model: Teacher,
+                attributes: ["name"],
+            },
+        ],
+    });
+
+    if (teacher) {
+        const content = teacher.toJSON();
+        return {
+            userId: content.TeacherId,
+            time: content.updatedAt,
+            user: content.Teacher.name,
+            status: content.status,
+            is_group: false,
+        };
+    }
+
+    return;
+};
+
+const getReviewGroup = async (studentId: any) => {
+    const teachers = await StuThrAss.findAll({
+        where: {
+            StudentId: studentId,
+            is_group: true,
+        },
+        include: [
+            {
+                model: Teacher,
+                attributes: ["name"],
+            },
+        ],
+    });
+
+    if (teachers && teachers.length) {
+        const result = [];
+        teachers.forEach((item) => {
+            const content = item.toJSON();
+            result.push({
+                userId: content.TeacherId,
+                time: content.updatedAt,
+                user: content.Teacher.name,
+                status: content.status,
+                is_group: true,
+            });
+        });
+
+        return result;
+    }
+
+    return;
+};
+
 export {
     GetReviewMessage,
     GetFileMessage,
     UpdateFileStatus,
     DownloadFile,
+    GetTeacherList,
 };

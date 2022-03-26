@@ -37,7 +37,7 @@ User.init({
     }, // 自增长id
     user_id: {
         type: DataTypes.STRING(255),
-        unique: true,
+        unique: 'user_id',
         allowNull: false,
     }, // 用户账号
     user_pswd: {

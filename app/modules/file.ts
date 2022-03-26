@@ -18,7 +18,7 @@ File.init({
     }, // 材料名
     file_url: {
         type: DataTypes.STRING(255),
-        unique: true,
+        unique: "file_url",
         allowNull: false,
     }, // 材料url
     file_detail: {

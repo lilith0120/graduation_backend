@@ -19,6 +19,8 @@ StuThrAss.init({
     }, // 答辩老师标志位
     status: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
     }, // 学生答辩标志位
 }, {
     sequelize,
