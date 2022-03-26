@@ -308,4 +308,5 @@ export {
     PostTeacherMessage,
     PostStudentMessage,
     UpdateAssMessage,
+    hasAssMessage,
 };

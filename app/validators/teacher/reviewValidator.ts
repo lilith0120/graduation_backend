@@ -1,15 +1,29 @@
 import Student from "../../modules/student";
 import File from "../../modules/file";
 import Stage from "../../modules/stage";
+import StuThrAss from "../../modules/stuThrAss";
 import { getTeacherId } from "./processValidator";
 import { Op } from "sequelize";
 
 const GetReviewMessage = async (size = 10, current = 1, status = -1, userId: any) => {
     const teacherId = await getTeacherId(userId);
+    const studentIds = await getStudentId(teacherId);
 
     let fileWhere: any = {
-        TeacherId: teacherId,
-        is_review: false,
+        [Op.or]: [
+            {
+                [Op.and]: {
+                    TeacherId: teacherId,
+                    is_review: false,
+                },
+            },
+            {
+                [Op.and]: {
+                    StudentId: studentIds,
+                    is_review: true,
+                },
+            },
+        ],
     };
     if (status !== -1) {
         fileWhere = {
@@ -92,6 +106,24 @@ const DownloadFile = async (fileIds: any) => {
             status: 0,
         },
     });
+};
+
+const getStudentId = async (teacherId: any) => {
+    const students = await StuThrAss.findAll({
+        where: {
+            TeacherId: teacherId,
+        },
+        attributes: ["student_id"],
+    });
+
+    const studentIds = [];
+    students.forEach((item) => {
+        const student = item.toJSON();
+
+        studentIds.push(student.student_id);
+    });
+
+    return studentIds;
 };
 
 export {

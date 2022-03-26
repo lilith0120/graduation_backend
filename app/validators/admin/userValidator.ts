@@ -5,7 +5,8 @@ import Teacher from "../../modules/teacher";
 import Profession from "../../modules/profession";
 import StuThrAss from "../../modules/stuThrAss";
 import { OAuthException, SqlException } from "../../../core/http-exception";
-import { UpdateAssMessage } from "../util/messageValidator";
+import { hasAssMessage } from "../util/messageValidator";
+import { Op } from 'sequelize';
 
 const AddStudents = async (students: any) => {
     const studentsMessage = [];
@@ -150,13 +151,13 @@ const UpdateStudentMessage = async (id: any, form: any) => {
                 },
                 transaction: t,
             });
-
-            await UpdateAssMessage([id], [form.review_id], false);
-            await UpdateAssMessage([id], form.review_group, true);
         });
     } catch (err) {
         throw new SqlException(err.message);
     }
+
+    await updateReviewMessage(id, [form.review_id], false);
+    await updateReviewMessage(id, form.review_group, true);
 };
 
 const AddTeachers = async (teachers: any) => {
@@ -324,6 +325,43 @@ const getGroupTeacher = async (studentId: any) => {
     }
 
     return teachers;
+};
+
+const updateReviewMessage = async (studentId: any, selectTeachers: any, is_group: any) => {
+    try {
+        await sequelize.transaction(async (t) => {
+            await StuThrAss.destroy({
+                where: {
+                    StudentId: studentId,
+                    TeacherId: {
+                        [Op.notIn]: selectTeachers,
+                    },
+                    is_group,
+                },
+                transaction: t,
+            });
+
+            const assData = [];
+            for (let thr of selectTeachers) {
+                const value = {
+                    StudentId: studentId,
+                    TeacherId: thr,
+                    is_group,
+                };
+
+                const hasAss = await hasAssMessage(studentId, thr, is_group, t);
+                if (!hasAss) {
+                    assData.push(value);
+                }
+            }
+
+            await StuThrAss.bulkCreate(assData, {
+                transaction: t,
+            });
+        });
+    } catch (err) {
+        throw new SqlException(err.message);
+    };
 };
 
 export {

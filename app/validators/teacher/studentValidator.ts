@@ -66,9 +66,9 @@ const GetAllStudent = async (userId: any, body: any) => {
     const result = students.map((item) => {
         const student = item.toJSON();
 
-        student.profession_name = student.Profession.name;
+        student.profession_name = student.Profession?.name;
         student.stage_name = student.Stage?.name ?? "未开始";
-        student.email = student.User.email;
+        student.email = student.User?.email;
         student.student_id = student.User.user_id;
 
         return student;
