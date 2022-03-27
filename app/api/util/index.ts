@@ -35,9 +35,10 @@ router.get('/get_teacher', new Auth().verify, async () => {
     })
 });
 
-router.get('/get_student/:is_review', new Auth().verify, async (ctx) => {
+router.get('/get_student/:is_review', new Auth().verify, async (ctx: any) => {
     const { is_review } = ctx.params;
-    const students = await GetStudentMessage(is_review);
+    const { id } = ctx.auth;
+    const students = await GetStudentMessage(id, is_review);
 
     success({
         students,

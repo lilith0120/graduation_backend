@@ -9,6 +9,7 @@ import { vertifyId } from "..";
 import { GetProcess as GetBaseProcess } from "../admin/processValidator";
 import { Op } from 'sequelize';
 import sequelize from "../../../core/db";
+import { getTeacherId } from "../teacher/processValidator";
 
 const GetGradeMessage = async () => {
     const grades = await Student.findAll({
@@ -43,7 +44,8 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetStudentMessage = async (is_review: any) => {
+const GetStudentMessage = async (userId: any, is_review: any) => {
+    const teacherId = await getTeacherId(userId);
     const students = await Student.findAll({
         attributes: ["id", "name"],
     });
@@ -58,8 +60,11 @@ const GetStudentMessage = async (is_review: any) => {
         const result = students.filter((item) => {
             const student = item.toJSON();
             const hasReview = reviewStudents.find((review) => review.toJSON().StudentId === student.id);
+            const isTeacher = reviewStudents.find(
+                (review) => review.toJSON().StudentId === student.id && review.toJSON().TeacherId === teacherId
+            );
 
-            if (!hasReview) {
+            if (!hasReview || isTeacher) {
                 return student;
             }
         });
