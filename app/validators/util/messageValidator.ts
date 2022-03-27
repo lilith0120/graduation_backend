@@ -44,7 +44,7 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetStudentMessage = async (teacherId: any, is_review: any) => {
+const GetStudentMessage = async (teacherId: number, is_review: any) => {
     const students = await Student.findAll({
         attributes: ["id", "name"],
     });
@@ -58,12 +58,15 @@ const GetStudentMessage = async (teacherId: any, is_review: any) => {
 
         const result = students.filter((item) => {
             const student = item.toJSON();
-            const hasReview = reviewStudents.find((review) => review.toJSON().StudentId === student.id);
-            const isTeacher = reviewStudents.find(
-                (review) => review.toJSON().StudentId === student.id && review.toJSON().TeacherId === teacherId
+            const hasReview = reviewStudents.findIndex((review) => review.toJSON().StudentId === student.id);
+            const isTeacher = reviewStudents.findIndex(
+                (review) => {
+                    const r = review.toJSON();
+                    return r.StudentId === student.id && r.TeacherId === teacherId;
+                }
             );
 
-            if (!hasReview || isTeacher) {
+            if (hasReview === -1 || isTeacher !== -1) {
                 return student;
             }
         });

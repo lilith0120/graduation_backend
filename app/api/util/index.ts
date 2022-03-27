@@ -37,7 +37,7 @@ router.get('/get_teacher', new Auth().verify, async () => {
 
 router.get('/get_student/:teacher_id/:is_review', new Auth().verify, async (ctx) => {
     const { teacher_id, is_review } = ctx.params;
-    const students = await GetStudentMessage(teacher_id, is_review);
+    const students = await GetStudentMessage(parseInt(teacher_id), is_review);
 
     success({
         students,
