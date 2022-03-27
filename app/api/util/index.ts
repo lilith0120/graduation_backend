@@ -70,8 +70,8 @@ router.post('/upload_file', new Auth().verify, async (ctx) => {
 });
 
 router.post('/get_teacher', new Auth().verify, async (ctx) => {
-    const { selectStudents } = ctx.request.body;
-    const teachers = await PostTeacherMessage(selectStudents);
+    const { selectStudents, is_review } = ctx.request.body;
+    const teachers = await PostTeacherMessage(selectStudents, is_review);
 
     success({
         teachers,
@@ -79,8 +79,8 @@ router.post('/get_teacher', new Auth().verify, async (ctx) => {
 });
 
 router.post('/get_student', new Auth().verify, async (ctx) => {
-    const { selectTeachers } = ctx.request.body;
-    const students = await PostStudentMessage(selectTeachers);
+    const { selectTeachers, is_review } = ctx.request.body;
+    const students = await PostStudentMessage(selectTeachers, is_review);
 
     success({
         students,

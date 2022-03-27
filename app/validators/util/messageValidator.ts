@@ -147,11 +147,12 @@ const GetProcessMessage = async (teacherId: any, hasReview = false) => {
     return result;
 };
 
-const PostTeacherMessage = async (selectStudents: any) => {
+const PostTeacherMessage = async (selectStudents: any, is_review: any) => {
     const studentLength = selectStudents.length;
     const teachers = await StuThrAss.findAll({
         where: {
             StudentId: selectStudents,
+            is_group: !is_review,
         },
         group: "teacher_id",
         attributes: [
@@ -171,11 +172,12 @@ const PostTeacherMessage = async (selectStudents: any) => {
     return result;
 };
 
-const PostStudentMessage = async (selectTeachers: any) => {
+const PostStudentMessage = async (selectTeachers: any, is_review: any) => {
     const teacherLength = selectTeachers.length;
     const students = await StuThrAss.findAll({
         where: {
             TeacherId: selectTeachers,
+            is_group: !is_review,
         },
         group: "student_id",
         attributes: [
