@@ -3,10 +3,17 @@ import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
     GetReviewMessage, GetFileMessage, UpdateFileStatus, GetTeacherList,
-    DownloadFile, DownloadReview
+    DownloadFile, DownloadReview, UpdateReviewStatus
 } from "../../validators/teacher/reviewValidator";
 const router = new Router({
     prefix: '/api/teacher/review',
+});
+
+router.post('/', new Auth(1).verify, async (ctx) => {
+    const { teacher_id, student_id, is_group, pass } = ctx.request.body;
+    await UpdateReviewStatus(teacher_id, student_id, is_group, pass);
+
+    success();
 });
 
 router.post('/all', new Auth(1).verify, async (ctx: any) => {

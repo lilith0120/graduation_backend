@@ -150,6 +150,18 @@ const GetTeacherList = async (fileId: any) => {
     return list;
 };
 
+const UpdateReviewStatus = async (teacherId: any, studentId: any, is_group: any, pass: any) => {
+    await StuThrAss.update({
+        status: pass ? 2 : 3,
+    }, {
+        where: {
+            StudentId: studentId,
+            TeacherId: teacherId,
+            is_group,
+        },
+    });
+};
+
 const getStudentId = async (teacherId: any) => {
     const students = await StuThrAss.findAll({
         where: {
@@ -249,4 +261,5 @@ export {
     DownloadFile,
     DownloadReview,
     GetTeacherList,
+    UpdateReviewStatus,
 };
