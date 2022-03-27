@@ -131,8 +131,8 @@ const UpdateStudentMessage = async (id: any, form: any) => {
                 name: form.name,
                 sex: form.sex,
                 grade: form.grade,
-                profession_id: form.profession_id,
-                teacher_id: form.teacher_id,
+                ProfessionId: form.profession_id,
+                TeacherId: form.teacher_id,
             }, {
                 where: {
                     id,
