@@ -150,7 +150,7 @@ const GetTeacherList = async (fileId: any) => {
     return list;
 };
 
-const UpdateReviewStatus = async (teacherId: any, studentId: any, is_group: any, pass: any) => {
+const UpdateReviewStatus = async (teacherId: any, studentId: any, fileId: any, is_group: any, pass: any) => {
     await StuThrAss.update({
         status: pass ? 2 : 3,
     }, {
@@ -160,6 +160,35 @@ const UpdateReviewStatus = async (teacherId: any, studentId: any, is_group: any,
             is_group,
         },
     });
+
+    if (!pass) {
+        await File.update({
+            status: 3,
+        }, {
+            where: {
+                id: fileId,
+            },
+        });
+    } else {
+        const hasPass = await StuThrAss.findOne({
+            where: {
+                StudentId: studentId,
+                status: {
+                    [Op.ne]: 2,
+                },
+            },
+        });
+
+        if (!hasPass) {
+            await File.update({
+                status: 2,
+            }, {
+                where: {
+                    id: fileId,
+                },
+            });
+        }
+    }
 };
 
 const getStudentId = async (teacherId: any) => {

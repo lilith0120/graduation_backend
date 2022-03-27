@@ -10,8 +10,8 @@ const router = new Router({
 });
 
 router.post('/', new Auth(1).verify, async (ctx) => {
-    const { teacher_id, student_id, is_group, pass } = ctx.request.body;
-    await UpdateReviewStatus(teacher_id, student_id, is_group, pass);
+    const { teacher_id, student_id, is_group, pass, file_id } = ctx.request.body;
+    await UpdateReviewStatus(teacher_id, student_id, file_id, is_group, pass);
 
     success();
 });
