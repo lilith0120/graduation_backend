@@ -2,7 +2,8 @@ import * as Router from 'koa-router';
 import { success } from '../../../lib/helper';
 import Auth from '../../../middlewares/auth';
 import {
-    GetReviewMessage, GetFileMessage, UpdateFileStatus, DownloadFile, GetTeacherList
+    GetReviewMessage, GetFileMessage, UpdateFileStatus, GetTeacherList,
+    DownloadFile, DownloadReview
 } from "../../validators/teacher/reviewValidator";
 const router = new Router({
     prefix: '/api/teacher/review',
@@ -36,6 +37,13 @@ router.patch('/:fileId', new Auth(1).verify, async (ctx) => {
 router.patch('/download/file', new Auth(1).verify, async (ctx) => {
     const { fileIds } = ctx.request.body;
     await DownloadFile(fileIds);
+
+    success();
+});
+
+router.post('/download', new Auth(1).verify, async (ctx) => {
+    const { teacher_id, student_id, is_group } = ctx.request.body;
+    await DownloadReview(teacher_id, student_id, is_group);
 
     success();
 });

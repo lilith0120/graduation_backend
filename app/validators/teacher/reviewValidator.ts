@@ -109,6 +109,19 @@ const DownloadFile = async (fileIds: any) => {
     });
 };
 
+const DownloadReview = async (teacherId: any, studentId: any, is_group: any) => {
+    await StuThrAss.update({
+        status: 1,
+    }, {
+        where: {
+            StudentId: studentId,
+            TeacherId: teacherId,
+            is_group,
+            status: 0,
+        },
+    });
+};
+
 const GetTeacherList = async (fileId: any) => {
     const student = await getStudentByFileId(fileId);
     const { Student: { name }, createdAt, StudentId: id } = student;
@@ -234,5 +247,6 @@ export {
     GetFileMessage,
     UpdateFileStatus,
     DownloadFile,
+    DownloadReview,
     GetTeacherList,
 };
