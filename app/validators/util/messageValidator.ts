@@ -44,8 +44,7 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetStudentMessage = async (userId: any, is_review: any) => {
-    const teacherId = await getTeacherId(userId);
+const GetStudentMessage = async (teacherId: any, is_review: any) => {
     const students = await Student.findAll({
         attributes: ["id", "name"],
     });
