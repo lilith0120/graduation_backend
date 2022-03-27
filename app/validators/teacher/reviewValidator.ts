@@ -186,7 +186,7 @@ const getReviewTeacher = async (studentId: any) => {
         const content = teacher.toJSON();
         return {
             userId: content.TeacherId,
-            time: content.updatedAt,
+            time: content.status > 0 ? content.updatedAt : "",
             user: content.Teacher.name,
             status: content.status,
             is_group: false,
@@ -216,7 +216,7 @@ const getReviewGroup = async (studentId: any) => {
             const content = item.toJSON();
             result.push({
                 userId: content.TeacherId,
-                time: content.updatedAt,
+                time: content.status > 0 ? content.updatedAt : "",
                 user: content.Teacher.name,
                 status: content.status,
                 is_group: true,
