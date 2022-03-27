@@ -44,12 +44,13 @@ const GetTeacherMessage = async () => {
     return teachers;
 };
 
-const GetStudentMessage = async (teacherId: number, is_review: any) => {
+const GetStudentMessage = async (teacherId: number, is_review: boolean) => {
     const students = await Student.findAll({
         attributes: ["id", "name"],
     });
 
     if (is_review) {
+        console.log(is_review);
         const reviewStudents = await StuThrAss.findAll({
             where: {
                 is_group: false,
