@@ -50,7 +50,6 @@ const GetStudentMessage = async (teacherId: number, is_review: boolean) => {
     });
 
     if (is_review) {
-        console.log(is_review);
         const reviewStudents = await StuThrAss.findAll({
             where: {
                 is_group: false,

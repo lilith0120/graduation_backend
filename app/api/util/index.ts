@@ -35,7 +35,7 @@ router.get('/get_teacher', new Auth().verify, async () => {
     })
 });
 
-router.get('/get_student', new Auth().verify, async (ctx) => {
+router.post('/get_studentlist', new Auth().verify, async (ctx) => {
     const { teacher_id, is_review } = ctx.request.body;
     const students = await GetStudentMessage(teacher_id, is_review);
 
