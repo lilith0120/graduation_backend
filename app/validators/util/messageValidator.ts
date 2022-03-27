@@ -149,7 +149,9 @@ const GetProcessMessage = async (teacherId: any, hasReview = false) => {
         preId = v.id;
     }
 
-    result[result.length - 1].disabled = result[result.length - 1]?.disabled || hasReview;
+    if (result.length !== 0) {
+        result[result.length - 1].disabled = result[result.length - 1].disabled || hasReview;
+    }
 
     return result;
 };
