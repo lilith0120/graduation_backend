@@ -40,9 +40,7 @@ const GetAllStudent = async (userId: any, body: any) => {
     }
 
     const studentCount = await Student.count({
-        where: {
-            TeacherId: teacherId,
-        },
+        where: studentWhere,
     });
     const students = await Student.findAll({
         limit: size,

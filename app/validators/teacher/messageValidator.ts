@@ -32,7 +32,16 @@ const GetTeacherMessage = async (userId: any) => {
 };
 
 const GetAllTeacher = async (size = 10, current = 1, search: any) => {
-    const teacherCount = await Teacher.count();
+    const teacherCount = await Teacher.count({
+        where: {
+            name: {
+                [Op.substring]: search?.name ?? '',
+            },
+            sex: {
+                [Op.substring]: search?.sex ?? '',
+            },
+        },
+    });
     const teachers = await Teacher.findAll({
         limit: size,
         offset: (current - 1) * size,

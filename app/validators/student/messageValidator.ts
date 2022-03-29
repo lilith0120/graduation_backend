@@ -74,7 +74,9 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
         };
     }
 
-    const studentCount = await Student.count();
+    const studentCount = await Student.count({
+        where: studentWhere,
+    });
     const students = await Student.findAll({
         limit: size,
         offset: (current - 1) * size,
@@ -156,6 +158,15 @@ const GetAllFile = async (id: any, body: any) => {
 
     const fileCount = await File.count({
         where: {
+            file_name: {
+                [Op.substring]: search?.file_name ?? '',
+            },
+            status: {
+                [Op.substring]: search?.file_status ?? '',
+            },
+            StageId: {
+                [Op.substring]: search?.process_id ?? '',
+            },
             StudentId: student.id,
         },
     });
