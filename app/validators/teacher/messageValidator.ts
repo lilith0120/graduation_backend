@@ -41,6 +41,17 @@ const GetAllTeacher = async (size = 10, current = 1, search: any) => {
                 [Op.substring]: search?.sex ?? '',
             },
         },
+        include: [
+            {
+                model: User,
+                attributes: ["user_id", "email"],
+                where: {
+                    user_id: {
+                        [Op.substring]: search?.teacher_id ?? '',
+                    },
+                },
+            },
+        ],
     });
     const teachers = await Teacher.findAll({
         limit: size,

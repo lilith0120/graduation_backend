@@ -76,6 +76,17 @@ const GetAllStudent = async (size = 10, current = 1, search: any) => {
 
     const studentCount = await Student.count({
         where: studentWhere,
+        include: [
+            {
+                model: User,
+                attributes: ["user_id"],
+                where: {
+                    user_id: {
+                        [Op.substring]: search?.student_id ?? '',
+                    },
+                },
+            },
+        ],
     });
     const students = await Student.findAll({
         limit: size,
