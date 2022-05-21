@@ -297,7 +297,7 @@ const updateStudentStage = async (body: any, stage: any) => {
 
 const updateReviewTeacherStage = async (studentId: any) => {
     await StuThrAss.update({
-        status: null,
+        status: 0,
     }, {
         where: {
             StudentId: studentId,
